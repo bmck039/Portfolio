@@ -723,6 +723,70 @@
     }
 
     /* ─────────────────────────────────────────────
+       PUBLICATIONS
+       ───────────────────────────────────────────── */
+    #publications {}
+    .pub-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .pub-card {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-surface);
+      transition: border-color 0.3s;
+    }
+    .pub-card:hover { border-color: var(--border-hover); }
+    .pub-status {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--violet);
+      background: var(--violet-dim);
+      padding: 3px 8px;
+      border-radius: 2px;
+      margin-bottom: 14px;
+    }
+    .pub-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .pub-authors {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+    .pub-authors strong { color: var(--text); font-weight: 500; }
+    .pub-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      line-height: 1.7;
+      max-width: 640px;
+      margin-bottom: 16px;
+    }
+    .pub-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      transition: color 0.2s;
+    }
+    .pub-link:hover { color: var(--text); }
+
+    /* ─────────────────────────────────────────────
        CONTACT
        ───────────────────────────────────────────── */
     #contact {
@@ -887,6 +951,7 @@
   <section id="about"><div class="container" id="aboutContent"></div></section>
   <section id="skills"><div class="container" id="skillsContent"></div></section>
   <section id="projects"><div class="container" id="projectsContent"></div></section>
+  <section id="publications"><div class="container" id="publicationsContent"></div></section>
   <section id="education"><div class="container" id="educationContent"></div></section>
   <section id="contact"><div class="container" id="contactContent"></div></section>
 </main>
@@ -926,25 +991,26 @@ const CONFIG = {
   about: {
     // Each string is a paragraph. Use <strong> for emphasis.
     bio: [
-      "I'm a <strong>physicist</strong>, recently graduated from Southwestern University with a B.S. in Physics and Computer Science. My main interest is using computation to understand physical systems - most of my projects stem from a physics question I wanted to answer, or a physical problem I wanted to solve.",
-      "I also just enjoy building things. Whether it's a novel tool, a hardware system that talks to the real world, or a piece of open-source infrastructure used by gravitational wave researchers, I find the work satisfying when there's something tangible at the end of it. The CS side of my degree has let me approach those problems with more rigor than I otherwise would have.",
+      "I'm a <strong>physicist</strong>, recently graduated from Southwestern University with a B.S. in Physics and Computer Science. My main interest is using computation to understand physical systems - most of my projects stem from a physics question I wanted to answer, or a physical problem I wanted to solve. Most recently that's meant an NSF REU at UT Dallas, using PyCBC and HPC workloads on TACC Lonestar to separate the signatures of gravitational lensing from binary black hole precession in gravitational wave data.",
+      "I also just enjoy building things. Whether it's a novel tool, a hardware system that talks to the real world, or a piece of open-source infrastructure used by gravitational wave researchers, I find the work satisfying when there's something tangible at the end of it. The CS side of my degree has let me approach those problems with more rigor than I otherwise would have. I've also spent several semesters as a Physics I/II tutor and an IT student technician at Southwestern, which has kept me equally comfortable explaining a concept from scratch as debugging someone else's hardware.",
       "I'm currently looking for new opportunities in research and software development. If you think I might be a good fit for your team, or just want to chat about physics and code, feel free to reach out!",
     ],
 
     // Quick-stat cards displayed in the about section
     stats: [
-      { num: "5+",  label: "Projects" },
-      { num: "10+",  label: "Languages" },
+      { num: "8+",  label: "Projects" },
+      { num: "15+",  label: "Languages" },
       { num: "4",   label: "Years" },
       { num: "1",   label: "Open-source PR" },
     ],
 
     // Contact / profile info rows
     info: [
-      { icon: "📍", key: "Location",  value: "Georgetown, TX" },
+      { icon: "📍", key: "Location",  value: "Round Rock, TX" },
       { icon: "🎓", key: "School",    value: "Southwestern University" },
       { icon: "⚙️", key: "Interests", value: "AI/ML, Physics, IoT, Systems" },
       { icon: "📧", key: "Email",     value: "mckallipb02@gmail.com", href: "mailto:mckallipb02@gmail.com" },
+      { icon: "📱", key: "Phone",     value: "(512) 983-8611", href: "tel:+15129838611" },
       { icon: "🐙", key: "GitHub",    value: "github.com/bmck039", href: "https://github.com/bmck039" },
       { icon: "💼", key: "LinkedIn",  value: "linkedin.com/in/ben-mckallip", href: "https://linkedin.com/in/ben-mckallip" },
     ],
@@ -955,32 +1021,42 @@ const CONFIG = {
     {
       icon: "🐍",
       category: "Languages",
-      items: ["Python", "C++", "Java", "Go", "HTML/CSS", "JavaScript", "TypeScript"],
+      items: ["Python", "C++", "Java", "Go", "C", "C#", "PHP", "HTML/CSS", "JavaScript", "TypeScript", "SQL", "Haskell", "Prolog", "Lisp", "Curry"],
+    },
+    {
+      icon: "🌐",
+      category: "Web & Backend",
+      items: ["Svelte / SvelteKit", "Node.js", "Express", "Flask", "Gorilla Mux", "REST API Design", "WebSockets", "OAuth", "Nginx"],
     },
     {
       icon: "🗄️",
       category: "Databases",
-      items: ["SQL", "PostgreSQL", "MongoDB"],
+      items: ["SQL", "PostgreSQL", "MongoDB", "Neo4j"],
     },
     {
       icon: "🤖",
       category: "AI & Machine Learning",
-      items: ["Reinforcement Learning", "Monte Carlo Tree Search", "Neural Networks", "scikit-learn", "Expectiminimax", "SIMPLE Library", "TensorFlow", "PyTorch"],
+      items: ["Reinforcement Learning", "Monte Carlo Tree Search", "Neural Networks", "scikit-learn", "Expectiminimax", "SIMPLE Library", "TensorFlow", "PyTorch", "LLM APIs (OpenAI, Anthropic)", "Prompt Engineering"],
     },
     {
       icon: "🔭",
       category: "Physics & Research",
-      items: ["Gravitational Wave Analysis", "Match Filtering", "PyCBC", "NumPy", "SciPy", "Matplotlib", ],
+      items: ["Gravitational Wave Analysis", "Match Filtering", "PyCBC", "NumPy", "SciPy", "Matplotlib", "High-Performance Computing", "Grace", "DS9", "Rebound N-Body Simulation"],
+    },
+    {
+      icon: "☁️",
+      category: "Cloud & DevOps",
+      items: ["Docker", "Google Cloud Platform", "Cloudflare (Tunnels, DNS)", "GitHub Actions", "CI/CD", "Linux Server Administration", "Bash Scripting"],
     },
     {
       icon: "🔧",
-      category: "Tools & Hardware",
-      items: ["Git", "Docker", "Linux", "Raspberry Pi", "BLE / Bluetooth", "Web Servers"],
+      category: "Embedded & Hardware",
+      items: ["Arduino", "ESP32", "ESPHome", "Raspberry Pi", "BLE / Bluetooth", "IR Protocols (Custom RC5)", "Inverse Kinematics", "Circuit Design", "3D Printing"],
     },
     {
-      icon: "λ",
-      category: "Functional & Logic (familiar)",
-      items: ["Haskell", "Prolog", "Lisp"],
+      icon: "🗂️",
+      category: "Tools & Systems",
+      items: ["Git", "LaTeX", "Home Assistant", "Adobe Creative Cloud"],
     },
   ],
 
@@ -1024,8 +1100,8 @@ const CONFIG = {
     },
     {
       title:       "Gravitational Lensing & Precession",
-      subtitle:    "NSF-Funded Astrophysics Research",
-      description: "Research investigating whether gravitational waveforms from regularly precessing binary black holes can be distinguished from those distorted by gravitational lensing. Uses PyCBC and match-filtering to map the chirp mass and time-delay parameter space where the two effects become degenerate, with implications for detector signal-to-noise requirements. Conducted as part of the NSF PAARE-funded TEXAS Bridge Program.",
+      subtitle:    "NSF REU, University of Texas at Dallas",
+      description: "Research investigating whether gravitational waveforms from regularly precessing binary black holes can be distinguished from those distorted by gravitational lensing. Working independently alongside graduate students and a Principal Investigator, I used PyCBC and match-filtering - run as HPC workloads on TACC Lonestar - to map the chirp mass, time-delay, flux-ratio, and precession parameter space where the two effects become degenerate, and estimated the prevalence and detectability of gravitational microlenses given current detector signal-to-noise constraints.",
       tags:        ["Python", "Jupyter Notebook", "PyCBC", "Gravitational Waves", "Match Filtering", "NumPy", "SciPy", "HPC"],
       category:    "Physics Research",
       github:      "https://github.com/bmck039/lensing_and_precession",
@@ -1056,30 +1132,63 @@ const CONFIG = {
       image:       "assets/optimized_match-bugfix.png",
       featured:    true,
     },
-    // ── Add more projects here ──────────────────────────────────
-    // {
-    //   title:       "Your Next Project",
-    //   subtitle:    "What it is",
-    //   description: "What it does and what you built.",
-    //   tags:        ["Tag1", "Tag2"],
-    //   category:    "Software",
-    //   github:      "https://github.com/bmck039/...",
-    //   demo:        null,
-    //   image:       null,
-    //   featured:    false,
-    // },
+    {
+      title:       "Full-Stack CS Capstone",
+      subtitle:    "Campus Organization Matching Platform",
+      description: "A full-stack platform matching 1,600 students with 70 campus organizations at Southwestern University. I wrote the backend, database schema, authentication system, and REST API in Go and PostgreSQL, set up automated transactional email through GCP, and configured reverse-proxy production hosting over a Cloudflare Tunnel. I also provisioned a shared Linux development VM with remote SSH access for the team, configured the Svelte build pipeline, and supported 3 teammates on frontend integration and the matching algorithm. Handed off to the Office of Student Life; official adoption pending.",
+      tags:        ["Go", "Svelte", "PostgreSQL", "GCP", "Cloudflare", "Linux"],
+      category:    "Software",
+      github:      "https://github.com/MattVolkin/SU-Organization-Matching",
+      demo:        "https://capstone.benmckallip.com",
+      image:       null,
+      featured:    true,
+    },
+    {
+      title:       "Astrus Chat Application",
+      subtitle:    "Long-Running Personal Project (2015-2024)",
+      description: "A full-stack chat application with WebSocket-based real-time messaging and a custom-built secure login system. Started in 8th grade and iterated on through early college, it served as a self-taught foundation for the formal computer science work that came after it.",
+      tags:        ["WebSockets", "Custom Authentication", "Full-Stack"],
+      category:    "Software",
+      github:      "https://github.com/bmckallip/Astrus",
+      demo:        null,
+      image:       null,
+      featured:    false,
+    },
+    {
+      title:       "ESP32 Smart-Home IR Controller",
+      subtitle:    "Home Assistant Integration",
+      description: "An ESP32-based IR receiver/emitter integrated with Home Assistant via ESPHome, enabling multi-device macro control so a single remote press can trigger commands across multiple devices. I wrote a custom RC5 instruction set to work around hardware limitations of the IR receiver module.",
+      tags:        ["ESP32", "ESPHome", "Home Assistant", "IR / Custom RC5"],
+      category:    "IoT & Hardware",
+      github:      null,
+      demo:        null,
+      image:       null,
+      featured:    false,
+    },
+  ],
+
+  /* ── PUBLICATIONS ───────────────────────────────────────────── */
+  publications: [
+    {
+      status:      "In preparation",
+      authors:     "Nguyen Vo, T. N., Singh, T., <strong>McKallip, B.</strong>, Kesden, M., &amp; King, L.",
+      title:       "Distinguishing lensing and precessional modulation in binary black-hole inspiral waveforms",
+      description: "Grew out of an NSF Research Experiences for Undergraduates (REU) project at the University of Texas at Dallas, mapping the parameter space where gravitational lensing and binary black hole precession become degenerate in inspiral waveforms.",
+      link:        "https://github.com/fairytien/lensing_and_precession",
+      linkLabel:   "Related code",
+    },
   ],
 
   /* ── EDUCATION ──────────────────────────────────────────────── */
   education: [
     {
       institution: "Southwestern University",
-      degree:      "B.S. Physics & Computer Science",
+      degree:      "B.S. Physics & Computer Science, Minor in Mathematics",
       location:    "Georgetown, TX",
       dates:       "August 2022 - May 2026",
-      details:     "[Relevant coursework, research groups, GPA if desired, academic honors, etc.]",
+      details:     "Graduated Cum Laude with a 3.780 / 4.00 GPA across 165 credit hours, with six semesters on the Dean's List. Relevant coursework spans Physics (General Relativity, Undergraduate Astrophysics, Quantum Mechanics, Electromagnetism, Electronics), Computer Science (Artificial Intelligence, Database Management, Algorithms, Senior Seminar in Software Engineering), and Mathematics (Differential Equations, Linear Algebra, Complex Analysis, Vector Calculus).",
       // Chips shown below details - e.g. courses, honors, clubs
-      highlights:  ["General Relativity", "[Other Relevant Courses]", "Dean's List", "[Clubs / Activities]"],
+      highlights:  ["Feagin Scholarship", "Cody Scholar Award", "King Creativity Award", "Upsilon Pi Epsilon", "Pi Mu Epsilon", "Omicron Delta Kappa", "Physics Club (Officer)", "Computer Science Club"],
     },
     // Add more education entries here if needed (e.g. study abroad, community college)
   ],
@@ -1127,7 +1236,7 @@ function initMeta() {
 /* ── Navigation ──────────────────────────────────────────────── */
 function renderNav() {
   const { first, last } = CONFIG.name;
-  const links = ["About","Skills","Projects","Education","Contact"];
+  const links = ["About","Skills","Projects","Publications","Education","Contact"];
   const resumeBtn = CONFIG.resumeUrl
     ? `<a class="btn-resume" href="${CONFIG.resumeUrl}" target="_blank">Résumé</a>`
     : "";
@@ -1309,6 +1418,23 @@ function renderProjects() {
   });
 }
 
+/* ── Publications ─────────────────────────────────────────────── */
+function renderPublications() {
+  $("publicationsContent").innerHTML = `
+    <p class="section-label reveal">Publications</p>
+    <h2 class="section-title reveal">Research <em>output</em></h2>
+    <div class="pub-list">
+      ${CONFIG.publications.map(p => `
+        <div class="pub-card reveal">
+          <span class="pub-status">${p.status}</span>
+          <h3 class="pub-title">${p.title}</h3>
+          <p class="pub-authors">${p.authors}</p>
+          ${p.description ? `<p class="pub-desc">${p.description}</p>` : ""}
+          ${p.link ? `<a class="pub-link" href="${p.link}" target="_blank" rel="noopener"><span>⬡</span> ${p.linkLabel || "Link"}</a>` : ""}
+        </div>`).join("")}
+    </div>`;
+}
+
 /* ── Education ────────────────────────────────────────────────── */
 function renderEducation() {
   $("educationContent").innerHTML = `
@@ -1382,6 +1508,7 @@ function init() {
   renderAbout();
   renderSkills();
   renderProjects();
+  renderPublications();
   renderEducation();
   renderContact();
   renderFooter();
