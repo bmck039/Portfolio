@@ -1,0 +1,21 @@
+name: portfolio
+
+services:
+  web:
+    build: .
+    image: portfolio-web
+    container_name: portfolio-web
+    restart: unless-stopped
+    ports:
+      # Loopback only: the site is reached from outside through the cloudflared tunnel.
+      - "127.0.0.1:8080:8080"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"

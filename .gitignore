@@ -1,0 +1,7 @@
+# Go
+/server/server
+*.test
+*.out
+
+# Secrets
+.env

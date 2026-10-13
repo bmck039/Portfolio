@@ -1,0 +1,10 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+compose.yaml
+**/node_modules
+frontend/dist
+**/.vscode
+**/*.md
+.env
