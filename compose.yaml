@@ -7,8 +7,15 @@ services:
     container_name: portfolio-web
     restart: unless-stopped
     ports:
-      # Loopback only: the site is reached from outside through the cloudflared tunnel.
+      # Loopback only, for checking the site locally. Public traffic comes in
+      # through the cloudflared tunnel, which needs no published port.
       - "127.0.0.1:8080:8080"
+    volumes:
+      # Tunnel config.yml and credentials file; see cloudflared/config.example.yml.
+      - ./cloudflared:/etc/cloudflared:ro
+    environment:
+      # Optional. Raises GitHub's API rate limit for the project cards; set it in .env.
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     read_only: true
     cap_drop:
       - ALL

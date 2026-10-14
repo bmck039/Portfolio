@@ -1,0 +1,15 @@
+# Copy to config.yml and fill in. Put the tunnel's credentials file (the
+# <tunnel-id>.json that `cloudflared tunnel create` wrote to ~/.cloudflared)
+# in this folder next to it. Both must be readable by uid 1000.
+#
+# This folder is mounted at /etc/cloudflared inside the container, so paths
+# here are container paths.
+
+tunnel: <tunnel-id>
+credentials-file: /etc/cloudflared/<tunnel-id>.json
+
+ingress:
+  # The web server runs in the same container as cloudflared.
+  - hostname: benmckallip.com
+    service: http://localhost:8080
+  - service: http_status:404
