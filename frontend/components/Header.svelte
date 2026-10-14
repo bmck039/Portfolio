@@ -2,6 +2,7 @@
 	import { chirp, chirpPath } from '../lib/chirp'
 	import { fit } from '../lib/fit'
 	import { site } from '../lib/site'
+	import Arrow from './Arrow.svelte'
 	import Signal from './Signal.svelte'
 
 	interface Props {
@@ -97,7 +98,7 @@
 									target={isExternal(link.href) ? '_blank' : undefined}
 									rel={isExternal(link.href) ? 'noopener' : undefined}
 								>
-									{link.label}<span class="arrow" aria-hidden="true">{isExternal(link.href) ? '↗' : '→'}</span>
+									{link.label}<Arrow />
 								</a>
 							</li>
 						{/each}
@@ -229,20 +230,6 @@
 		color: var(--spot);
 	}
 
-	.arrow {
-		font-family: var(--font-mono);
-		font-size: 0.8em;
-		color: var(--ink-3);
-		transition:
-			translate var(--dur-2) var(--ease-out),
-			color var(--dur-2);
-	}
-
-	.contact a:hover .arrow {
-		color: var(--spot);
-		translate: 0.15em 0;
-	}
-
 	nav {
 		position: relative;
 		height: var(--bar-h);
@@ -359,10 +346,6 @@
 
 		.contact li + li {
 			border-top: none;
-		}
-
-		.contact a {
-			gap: 0.3em;
 		}
 
 		.folio span:nth-child(2) {

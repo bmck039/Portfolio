@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte'
 	import { fetchRepo, parseRepo, repoTitle, type Repo } from '../lib/github'
 	import { reveal } from '../lib/reveal'
+	import Arrow from './Arrow.svelte'
 
 	interface Props {
 		/** Heading. Left out, it is filled in from GitHub when `link` is a repository. */
@@ -75,7 +76,7 @@
 			<div class="mat">
 				<img src={img} {alt} loading="lazy" />
 			</div>
-			<figcaption class="annot">{caption ? ` — ${caption}` : ''}</figcaption>
+			<figcaption><span class="annot number"></span>{caption ?? ''}</figcaption>
 		</figure>
 	{/if}
 
@@ -88,9 +89,7 @@
 			<h3>
 				{#if href}
 					<a {href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
-						<span class="title">{heading}</span>{#if external}<span class="arrow" aria-hidden="true"
-								>&#8599;</span
-							>{/if}
+						<span class="title">{heading}</span>{#if external}<Arrow />{/if}
 					</a>
 				{:else}
 					<span class="title">{heading}</span>
@@ -187,13 +186,20 @@
 		box-shadow: 0 10px 24px -16px oklch(0.2 0.02 60 / 0.45);
 	}
 
+	/* Same caption style as Fig. 1 in the masthead. */
 	figcaption {
 		margin-top: var(--space-2xs);
+		font-size: var(--step--1);
+		color: var(--ink-2);
 	}
 
-	figcaption::before {
+	.number {
+		margin-right: 0.75em;
+		color: var(--ink);
+	}
+
+	.number::before {
 		content: 'Fig. ' counter(figure);
-		color: var(--ink-2);
 	}
 
 	.kicker {
@@ -219,23 +225,6 @@
 	.card:hover .title,
 	.card:focus-within .title {
 		background-size: 100% 1px;
-	}
-
-	.arrow {
-		display: inline-block;
-		margin-left: 0.2em;
-		font-family: var(--font-mono);
-		font-size: 0.6em;
-		vertical-align: 0.35em;
-		color: var(--ink-3);
-		transition:
-			translate var(--dur-2) var(--ease-out),
-			color var(--dur-2);
-	}
-
-	.card:hover .arrow {
-		translate: 0.15em -0.15em;
-		color: var(--spot);
 	}
 
 	/* Stretch the title link over the whole card so all of it is clickable. */

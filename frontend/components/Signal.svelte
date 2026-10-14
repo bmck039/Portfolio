@@ -152,10 +152,14 @@
 		animation: sweep 2.2s var(--ease-in-out) 0.5s backwards;
 	}
 
-	/* Drawn left to right once, like a trace on a scope. */
+	/* Drawn left to right once, like a trace on a scope. Both ends are inset()
+	   so browsers interpolate between them rather than switching halfway. */
 	@keyframes sweep {
 		from {
 			clip-path: inset(0 100% 0 0);
+		}
+		to {
+			clip-path: inset(0 0 0 0);
 		}
 	}
 

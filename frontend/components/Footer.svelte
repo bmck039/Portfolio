@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { site } from '../lib/site'
+	import Arrow from './Arrow.svelte'
 
 	const year = new Date().getFullYear()
 	const updated = new Date(__BUILD_DATE__).toLocaleDateString('en-US', {
@@ -27,11 +28,11 @@
 					<a
 						href={link.href}
 						target={isExternal(link.href) ? '_blank' : undefined}
-						rel={isExternal(link.href) ? 'noopener' : undefined}>{link.label}</a
+						rel={isExternal(link.href) ? 'noopener' : undefined}>{link.label}<Arrow /></a
 					>
 				</li>
 			{/each}
-			<li data-print="hide"><a href="#top" class="top">Back to top <span aria-hidden="true">↑</span></a></li>
+			<li data-print="hide"><a href="#top">Back to top<Arrow direction="up" /></a></li>
 		</ul>
 	</div>
 </footer>
@@ -83,17 +84,15 @@
 	}
 
 	.links a {
-		display: block;
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
 		padding-block: 0.25em;
 		transition: color var(--dur-2);
 	}
 
 	.links a:hover {
 		color: var(--spot);
-	}
-
-	.top {
-		color: var(--ink-3);
 	}
 
 	@media (max-width: 900px) {

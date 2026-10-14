@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte'
 	import type { HTMLAnchorAttributes } from 'svelte/elements'
+	import Arrow from './Arrow.svelte'
 
 	interface Props extends HTMLAnchorAttributes {
 		href: string
@@ -13,40 +14,37 @@
 </script>
 
 <a class="button {variant}" {href} {...rest}>
-	<span class="label">{@render children()}</span>
-	<span class="arrow" aria-hidden="true">→</span>
+	<span class="label">{@render children()}</span><Arrow />
 </a>
 
 <style>
 	.button {
 		display: inline-flex;
 		align-items: baseline;
-		gap: 0.4em;
 		font-size: var(--step-1);
 		line-height: 1.3;
+		transition: color var(--dur-2);
 	}
 
 	.label {
-		background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
-		transition: background-size var(--dur-3) var(--ease-out);
+		text-decoration: underline;
+		text-decoration-color: var(--rule-strong);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.2em;
+		transition: text-decoration-color var(--dur-2);
 	}
 
-	.button:hover .label {
-		background-size: 0% 1px;
-		background-position: right bottom;
-	}
-
-	.arrow {
-		font-family: var(--font-mono);
-		font-size: 0.75em;
-		transition: translate var(--dur-2) var(--ease-out);
-	}
-
-	.button:hover .arrow {
-		translate: 0.25em 0;
-	}
-
-	.primary {
+	.button:hover,
+	.button:focus-visible {
 		color: var(--spot);
+	}
+
+	.button:hover .label,
+	.button:focus-visible .label {
+		text-decoration-color: currentColor;
+	}
+
+	.primary .label {
+		text-decoration-color: var(--spot);
 	}
 </style>

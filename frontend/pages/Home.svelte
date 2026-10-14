@@ -55,8 +55,8 @@
 	<Section label="Contact" title="Section heading">
 		<p>A short message.</p>
 		<div class="actions">
-			{#each site.links as link, i (link.label)}
-				<Button href={link.href} variant={i === 0 ? 'primary' : 'secondary'}>{link.label}</Button>
+			{#each site.links as link (link.label)}
+				<Button href={link.href}>{link.label}</Button>
 			{/each}
 		</div>
 	</Section>
