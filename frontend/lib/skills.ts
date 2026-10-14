@@ -101,16 +101,4 @@ export const skills: SkillGroup[] = [
 			{ name: 'Bash', icon: siGnubash },
 		],
 	},
-	{
-		name: 'Other',
-		skills: [
-			'Communication',
-			'Presentation',
-			'Curiosity',
-			'Problem-solving',
-			'Critical thinking',
-			'Attention to detail',
-			'Listening',
-		],
-	},
 ]

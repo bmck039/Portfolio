@@ -182,16 +182,19 @@
 		border-bottom: 1px solid var(--rule-strong);
 	}
 
+	/* fit() trims the name's box to its letters, so equal margins give equal
+	   space between the letters and the rules above and below. */
 	.nameplate {
-		margin-block: var(--space-xs) var(--space-2xs);
+		margin-block: var(--space-m);
 		font-weight: 450;
-		line-height: 0.92;
 		letter-spacing: -0.035em;
 		white-space: nowrap;
 	}
 
 	.nameplate span {
-		display: inline-block;
+		display: block;
+		width: max-content;
+		line-height: 1;
 	}
 
 	.deck {
@@ -226,6 +229,7 @@
 	.contact a {
 		display: flex;
 		justify-content: space-between;
+		align-items: baseline;
 		padding-block: 0.3em;
 		transition: color var(--dur-2);
 	}
@@ -342,6 +346,7 @@
 	@media print {
 		.nameplate span {
 			font-size: 4.5rem !important;
+			margin: 0 !important;
 		}
 
 		.masthead .wrap {
