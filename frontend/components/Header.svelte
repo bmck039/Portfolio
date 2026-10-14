@@ -79,7 +79,7 @@
 	scrolls normally until only the bar is left on screen and then stays put.
 	Its height never changes, so nothing below it shifts while it collapses.
 -->
-<header id="top" style:top="{-introHeight}px" style:--collapse={collapse} class:stuck={collapse >= 1}>
+<header style:top="{-introHeight}px" style:--collapse={collapse} class:stuck={collapse >= 1}>
 	{#if intro}
 		<div class="masthead" bind:offsetHeight={introHeight}>
 			<div class="wrap">

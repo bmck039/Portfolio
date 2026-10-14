@@ -32,6 +32,7 @@
 					>
 				</li>
 			{/each}
+			<!-- With no element called "top" on the page, #top means the top of the document. -->
 			<li data-print="hide"><a href="#top">Back to top<Arrow direction="up" /></a></li>
 		</ul>
 	</div>

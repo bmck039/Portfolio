@@ -94,6 +94,15 @@
 			tags={['Python', 'TensorFlow', 'Bluetooth LE']}
 			link="github.com/bmck039/Fish-Tank-Controller"
 		/>
+		<Card
+			width="full"
+			badge="Oct 2026"
+			title="This Portfolio"
+			subtitle="Personal project · benmckallip.com"
+			desc="The site you're reading: a Go web server and a Svelte and TypeScript frontend, packaged in Docker and served through a Cloudflare Tunnel. Its editorial design system follows each visitor's light or dark setting, project cards fill themselves in from GitHub, and Fig. 1 is an interactive model of a gravitational-wave chirp."
+			tags={['Go', 'Svelte', 'TypeScript', 'Docker', 'Cloudflare']}
+			link="github.com/bmck039/Portfolio"
+		/>
 	</Section>
 
 	<Section label="Experience" title="Research and work">
