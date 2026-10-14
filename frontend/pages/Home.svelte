@@ -3,7 +3,9 @@
 	import Card from '../components/Card.svelte'
 	import Layout from '../components/Layout.svelte'
 	import Section from '../components/Section.svelte'
+	import Skills from '../components/Skills.svelte'
 	import { site } from '../lib/site'
+	import { skills } from '../lib/skills'
 </script>
 
 <Layout>
@@ -13,9 +15,7 @@
 	</Section>
 
 	<Section label="Skills" title="Section heading">
-		<Card title="Skill group" tags={['Skill', 'Another skill', 'A third skill']} />
-		<Card title="Skill group" tags={['Skill', 'Another skill']} />
-		<Card title="Skill group" tags={['Skill', 'Another skill', 'A third skill', 'A fourth skill']} />
+		<Skills groups={skills} />
 	</Section>
 
 	<Section label="Projects" title="Section heading">
