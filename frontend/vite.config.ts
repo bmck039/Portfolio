@@ -16,6 +16,9 @@ export default defineConfig({
   root: pagesDir,
   publicDir: resolve(frontendDir, 'public'),
   plugins: [svelte({ configFile: false })],
+  define: {
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+  },
   build: {
     outDir: resolve(frontendDir, 'build'),
     emptyOutDir: true,
