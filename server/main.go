@@ -29,8 +29,9 @@ func main() {
 		w.Write([]byte("ok\n"))
 	})
 	// API routes go here. Unknown /api/ paths 404 instead of falling through to the frontend.
+	mux.Handle("GET /api/github/{owner}/{repo}", newGithubRepos(os.Getenv("GITHUB_TOKEN")))
 	mux.Handle("/api/", http.NotFoundHandler())
-	mux.Handle("/", frontend(os.DirFS(env("STATIC_DIR", "../frontend/dist"))))
+	mux.Handle("/", frontend(os.DirFS(env("STATIC_DIR", "../frontend/build"))))
 
 	srv := &http.Server{
 		Addr:              ":" + port,
@@ -60,36 +61,40 @@ func main() {
 	}
 }
 
-// frontend serves the built Svelte app. Paths that aren't files fall back to
-// index.html so client-side routes survive a page reload.
+// frontend serves the built pages. A request for /about is answered with
+// about.html (or about/index.html), and anything that doesn't resolve to a
+// file gets 404.html if the site has one.
 func frontend(dist fs.FS) http.Handler {
-	files := http.FileServerFS(dist)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := strings.TrimPrefix(path.Clean("/"+r.URL.Path), "/")
 		if name == "" {
 			name = "index.html"
 		}
 
-		if info, err := fs.Stat(dist, name); err != nil || info.IsDir() {
-			if path.Ext(name) != "" {
-				http.NotFound(w, r)
-				return
+		for _, candidate := range []string{name, name + ".html", name + "/index.html"} {
+			info, err := fs.Stat(dist, candidate)
+			if err != nil || info.IsDir() {
+				continue
 			}
-			name = "index.html"
-		}
-
-		if strings.HasPrefix(name, "assets/") {
-			// Vite puts a content hash in these filenames, so they never change.
-			w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
-		} else {
-			w.Header().Set("Cache-Control", "no-cache")
-		}
-
-		if name == "index.html" {
-			http.ServeFileFS(w, r, dist, name)
+			if strings.HasPrefix(candidate, "assets/") {
+				// Vite puts a content hash in these filenames, so they never change.
+				w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+			} else {
+				w.Header().Set("Cache-Control", "no-cache")
+			}
+			http.ServeFileFS(w, r, dist, candidate)
 			return
 		}
-		files.ServeHTTP(w, r)
+
+		page, err := fs.ReadFile(dist, "404.html")
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(page)
 	})
 }
 
