@@ -10,16 +10,18 @@
 		subtitle?: string
 		/** Body text. Left out, it is filled in from GitHub when `link` is a repository. */
 		desc?: string
-		/** Image shown across the top of the card. */
+		/** Image, set as a numbered figure. */
 		img?: string
 		alt?: string
+		/** Text after the figure number under the image. */
+		caption?: string
 		/** Where the card goes when clicked. "github.com/owner/repo" works without the https://. */
 		link?: string
-		/** Small label above the title, such as a category or dates. */
+		/** Small label above the title, such as a category or dates. Full-width cards without an image put it in the margin. */
 		badge?: string
-		/** Chips along the bottom. Left out, a card filled in from GitHub shows the repository's topics, or its language. */
+		/** Keywords listed along the bottom. Left out, a card filled in from GitHub shows the repository's topics, or its language. */
 		tags?: string[]
-		/** How much of the section's width the card takes up on a wide screen. */
+		/** Share of the grid on a wide screen. A full-width card with an image becomes a side-by-side spread. */
 		width?: 'third' | 'half' | 'full'
 		/** Extra content placed under the description. */
 		children?: Snippet
@@ -31,6 +33,7 @@
 		desc,
 		img,
 		alt = '',
+		caption,
 		link,
 		badge,
 		tags,
@@ -63,33 +66,34 @@
 	const loading = $derived(desc === undefined && repoRef !== null && repo === undefined)
 	const chips = $derived(tags ?? (repo?.topics.length ? repo.topics : repo?.language ? [repo.language] : []))
 	const source = $derived(repoRef ? 'GitHub' : external ? new URL(href!).hostname.replace(/^www\./, '') : '')
+	const meta = $derived([...chips, ...(source ? [source] : [])])
 </script>
 
-<article class="card {width}" {@attach reveal}>
+<article class="card {width}" class:plated={img} {@attach reveal}>
 	{#if img}
-		<div class="media">
-			<img src={img} {alt} loading="lazy" />
-		</div>
+		<figure class="plate">
+			<div class="mat">
+				<img src={img} {alt} loading="lazy" />
+			</div>
+			<figcaption class="annot">{caption ? ` — ${caption}` : ''}</figcaption>
+		</figure>
 	{/if}
 
-	<div class="body">
-		{#if badge || source}
-			<div class="meta">
-				{#if badge}
-					<span class="badge">{badge}</span>
-				{/if}
-				{#if source}
-					<span class="source">{source} ↗</span>
-				{/if}
-			</div>
-		{/if}
+	{#if badge}
+		<p class="kicker annot">{badge}</p>
+	{/if}
 
+	<div class="text">
 		{#if heading}
 			<h3>
 				{#if href}
-					<a {href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>{heading}</a>
+					<a {href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+						<span class="title">{heading}</span>{#if external}<span class="arrow" aria-hidden="true"
+								>&#8599;</span
+							>{/if}
+					</a>
 				{:else}
-					{heading}
+					<span class="title">{heading}</span>
 				{/if}
 			</h3>
 		{/if}
@@ -106,12 +110,10 @@
 
 		{@render children?.()}
 
-		{#if chips.length > 0}
-			<ul class="tags">
-				{#each chips as chip (chip)}
-					<li>{chip}</li>
-				{/each}
-			</ul>
+		{#if meta.length > 0}
+			<p class="meta annot">
+				{#each meta as item, i (i)}{#if i > 0}<span class="dot" aria-hidden="true"> · </span>{/if}{item}{/each}
+			</p>
 		{/if}
 	</div>
 </article>
@@ -122,97 +124,118 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
-		border: 1px solid var(--border);
-		border-radius: var(--radius);
-		background: var(--bg-raised);
-		transition:
-			opacity 0.5s var(--ease),
-			translate 0.5s var(--ease),
-			border-color 0.2s;
+		gap: var(--space-2xs);
+		padding-top: var(--space-xs);
+		border-top: 1px solid var(--rule-strong);
 	}
 
 	.half {
 		grid-column: span 6;
 	}
 
+	/* Full width: a spread. The plate takes seven columns and the text the rest;
+	   without a plate the badge sits in the margin and the text in the body. */
 	.full {
 		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: subgrid;
+		align-items: start;
 	}
 
-	.card:hover,
-	.card:focus-within {
-		border-color: color-mix(in oklch, var(--accent) 45%, var(--border));
+	.full .kicker {
+		grid-column: margin;
 	}
 
-	.media {
-		aspect-ratio: 16 / 9;
+	.full .text {
+		grid-column: body;
+	}
+
+	.full.plated .plate {
+		grid-column: 1 / 8;
+		grid-row: 1 / span 2;
+	}
+
+	.full.plated .kicker,
+	.full.plated .text {
+		grid-column: 8 / -1;
+	}
+
+	.plate {
+		counter-increment: figure;
+		margin-bottom: var(--space-2xs);
+	}
+
+	.mat {
 		overflow: hidden;
-		border-bottom: 1px solid var(--border);
-		background: var(--bg-surface);
+		padding: var(--space-3xs);
+		background: var(--mat);
+		transition:
+			translate var(--dur-3) var(--ease-out),
+			box-shadow var(--dur-3) var(--ease-out);
 	}
 
-	.media img {
+	.mat img {
 		width: 100%;
-		height: 100%;
+		aspect-ratio: 3 / 2;
 		object-fit: cover;
-		transition: scale 0.4s var(--ease);
+		/* White backgrounds take on the paper (or mat) colour, like a printed plate. */
+		mix-blend-mode: multiply;
 	}
 
-	.card:hover .media img {
-		scale: 1.02;
+	.card:hover .mat {
+		translate: 0 -2px;
+		box-shadow: 0 10px 24px -16px oklch(0.2 0.02 60 / 0.45);
 	}
 
-	@media (prefers-color-scheme: dark) {
-		.media img {
-			filter: brightness(0.88);
-		}
+	figcaption {
+		margin-top: var(--space-2xs);
 	}
 
-	.body {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 20px 22px 22px;
+	figcaption::before {
+		content: 'Fig. ' counter(figure);
+		color: var(--ink-2);
 	}
 
-	.meta {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		margin-bottom: 10px;
-		font-family: var(--font-mono);
-		font-size: 0.72rem;
-	}
-
-	.badge {
-		padding: 2px 8px;
-		border-radius: 999px;
-		font-weight: 500;
-		color: var(--accent);
-		background: var(--accent-dim);
-	}
-
-	.source {
-		margin-left: auto;
-		color: var(--text-muted);
-		transition: color 0.2s;
-	}
-
-	.card:hover .source {
-		color: var(--accent);
+	.kicker {
+		color: var(--spot);
 	}
 
 	h3 {
-		font-size: 1.1rem;
-		font-weight: 600;
-		line-height: 1.3;
+		font-size: var(--step-2);
+		font-weight: 450;
+		line-height: 1.12;
 		letter-spacing: -0.01em;
-		transition: color 0.2s;
 	}
 
-	.card:hover h3 {
-		color: var(--accent);
+	.title {
+		background: linear-gradient(var(--spot), var(--spot)) left bottom / 0% 1px no-repeat;
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
+		transition:
+			background-size var(--dur-3) var(--ease-out),
+			color var(--dur-2);
+	}
+
+	.card:hover .title,
+	.card:focus-within .title {
+		background-size: 100% 1px;
+	}
+
+	.arrow {
+		display: inline-block;
+		margin-left: 0.2em;
+		font-family: var(--font-mono);
+		font-size: 0.6em;
+		vertical-align: 0.35em;
+		color: var(--ink-3);
+		transition:
+			translate var(--dur-2) var(--ease-out),
+			color var(--dur-2);
+	}
+
+	.card:hover .arrow {
+		translate: 0.15em -0.15em;
+		color: var(--spot);
 	}
 
 	/* Stretch the title link over the whole card so all of it is clickable. */
@@ -226,65 +249,59 @@
 		outline: none;
 	}
 
+	.card:has(h3 a:focus-visible) {
+		outline: 2px solid var(--spot);
+		outline-offset: 6px;
+	}
+
 	.subtitle {
-		margin-top: 2px;
-		font-size: 0.85rem;
-		color: var(--text-muted);
+		margin-top: 0.15em;
+		color: var(--ink-3);
 	}
 
 	.desc {
-		flex: 1;
-		margin-top: 10px;
-		font-size: 0.92rem;
-		line-height: 1.65;
-		color: var(--text-dim);
+		margin-top: var(--space-2xs);
+		max-width: var(--measure);
+		color: var(--ink-2);
 	}
 
 	.skeleton {
-		flex: none;
-		height: 3.3em;
-		border-radius: 4px;
-		background: linear-gradient(var(--border) 0.9em, transparent 0) 0 0.35em / 100% 1.65em;
-		animation: pulse 1.4s ease-in-out infinite;
+		height: 3em;
+		background: linear-gradient(var(--rule) 1px, transparent 0) 0 0.75em / 100% 1.5em;
+		animation: shimmer 1.6s var(--ease-in-out) infinite;
 	}
 
-	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-		margin-top: auto;
-		padding-top: 18px;
+	.meta {
+		margin-top: var(--space-xs);
 	}
 
-	.tags li {
-		padding: 2px 8px;
-		border-radius: 6px;
-		background: var(--bg-surface);
-		font-family: var(--font-mono);
-		font-size: 0.7rem;
-		color: var(--text-dim);
+	.dot {
+		color: var(--rule-strong);
 	}
 
-	@keyframes pulse {
+	@keyframes shimmer {
 		50% {
-			opacity: 0.4;
+			opacity: 0.35;
 		}
 	}
 
-	@media (max-width: 1040px) {
+	@media (max-width: 1100px) {
 		.card {
 			grid-column: span 6;
 		}
 
-		.half,
-		.full {
+		.half {
 			grid-column: 1 / -1;
 		}
 	}
 
-	@media (max-width: 720px) {
-		.card {
+	@media (max-width: 900px) {
+		.card,
+		.full.plated .plate,
+		.full.plated .kicker,
+		.full.plated .text {
 			grid-column: 1 / -1;
+			grid-row: auto;
 		}
 	}
 </style>

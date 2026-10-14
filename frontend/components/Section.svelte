@@ -4,11 +4,14 @@
 
 	interface Props {
 		title: string
-		/** Small line above the title. */
+		/** Small line next to the section number. */
 		label?: string
 		/** Anchor for navigation links. Defaults to the label (or title) in lowercase. */
 		id?: string
-		/** Cards are laid out in a grid; anything else spans the full width. */
+		/**
+		 * Paragraphs and other content sit in the body column. Cards span the full
+		 * width of the grid, and <Note>s sit in the margin beside what follows them.
+		 */
 		children?: Snippet
 	}
 
@@ -24,70 +27,130 @@
 </script>
 
 <section id={anchor}>
-	<header {@attach reveal}>
-		{#if label}
-			<p class="label">{label}</p>
-		{/if}
-		<h2>{title}</h2>
-	</header>
+	<div class="wrap grid">
+		<div class="rule" aria-hidden="true"></div>
 
-	<div class="items">
-		{@render children?.()}
+		<div class="marker" {@attach reveal}>
+			<a class="number" href="#{anchor}" aria-label="Link to {label ?? title}"></a>
+			{#if label}
+				<p class="annot">{label}</p>
+			{/if}
+		</div>
+
+		<h2 {@attach reveal}>{title}</h2>
+
+		<div class="body">
+			{@render children?.()}
+		</div>
 	</div>
 </section>
 
 <style>
 	section {
-		max-width: var(--max-w);
-		margin: 0 auto;
-		padding: 72px var(--gutter);
+		counter-increment: section;
+		padding-block: var(--space-xl) var(--space-2xl);
 	}
 
-	section + :global(section) {
-		border-top: 1px solid var(--border);
+	.rule {
+		grid-column: 1 / -1;
+		border-top: 1px solid var(--rule-strong);
+		margin-bottom: var(--space-s);
 	}
 
-	header {
-		margin-bottom: 32px;
+	.marker {
+		grid-column: margin;
+		display: flex;
+		align-items: baseline;
+		gap: var(--space-xs);
 	}
 
-	.label {
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
-		font-weight: 500;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--accent);
-		margin-bottom: 8px;
+	.number {
+		font-size: var(--step-3);
+		font-weight: 350;
+		line-height: 1;
+		font-variant-numeric: lining-nums tabular-nums;
+		color: var(--spot);
+	}
+
+	.number::before {
+		content: counter(section, decimal-leading-zero);
+	}
+
+	/* Permalink mark on hover */
+	.number::after {
+		content: '¶';
+		margin-left: 0.15em;
+		font-size: 0.5em;
+		vertical-align: 0.4em;
+		opacity: 0;
+		transition: opacity var(--dur-2);
+	}
+
+	.number:hover::after,
+	.number:focus-visible::after {
+		opacity: 1;
 	}
 
 	h2 {
-		font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem);
-		font-weight: 600;
-		line-height: 1.2;
-		letter-spacing: -0.02em;
-		text-wrap: balance;
+		grid-column: body;
+		max-width: 22ch;
+		font-size: var(--step-4);
+		font-weight: 400;
+		line-height: 1.05;
+		letter-spacing: -0.015em;
 	}
 
-	.items {
-		display: grid;
-		grid-template-columns: repeat(12, 1fr);
-		gap: 20px;
-	}
-
-	.items > :global(:not(.card)) {
+	.body {
 		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: subgrid;
+		grid-auto-flow: row dense;
+		row-gap: var(--space-l);
+		margin-top: var(--space-xl);
 	}
 
-	.items > :global(p) {
-		max-width: 65ch;
-		color: var(--text-dim);
-		line-height: 1.75;
+	/* Default placement for anything inside a section; components such as
+	   Card, Note and Skills set their own columns. */
+	:where(.body) > :global(*) {
+		grid-column: body;
 	}
 
-	@media (max-width: 680px) {
-		section {
-			padding-block: 56px;
+	.body > :global(p) {
+		max-width: var(--measure);
+		color: var(--ink-2);
+	}
+
+	.body > :global(p + p) {
+		margin-top: calc(var(--space-l) * -1 + var(--space-s));
+	}
+
+	/* The opening paragraph of each section is set as a larger lede. */
+	.body > :global(p:first-child),
+	.body > :global(.note:first-child + p) {
+		font-size: var(--step-1);
+		line-height: 1.45;
+		color: var(--ink);
+	}
+
+	/* Drop cap on the opening paragraph of the first section. */
+	@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+		section:first-of-type .body > :global(p:first-child::first-letter),
+		section:first-of-type .body > :global(.note:first-child + p::first-letter) {
+			-webkit-initial-letter: 3;
+			initial-letter: 3;
+			margin-right: 0.08em;
+			font-weight: 500;
+			color: var(--spot);
+		}
+	}
+
+	@media (max-width: 900px) {
+		h2 {
+			margin-top: var(--space-xs);
+		}
+
+		.body {
+			margin-top: var(--space-l);
 		}
 	}
 </style>

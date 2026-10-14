@@ -4,6 +4,7 @@
 
 	interface Props extends HTMLAnchorAttributes {
 		href: string
+		/** Primary links are set in the spot colour. */
 		variant?: 'primary' | 'secondary'
 		children: Snippet
 	}
@@ -12,41 +13,40 @@
 </script>
 
 <a class="button {variant}" {href} {...rest}>
-	{@render children()}
+	<span class="label">{@render children()}</span>
+	<span class="arrow" aria-hidden="true">→</span>
 </a>
 
 <style>
 	.button {
 		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 8px 16px;
-		border: 1px solid transparent;
-		border-radius: 999px;
-		font-size: 0.9rem;
-		font-weight: 500;
-		transition:
-			background 0.2s,
-			border-color 0.2s,
-			color 0.2s;
+		align-items: baseline;
+		gap: 0.4em;
+		font-size: var(--step-1);
+		line-height: 1.3;
+	}
+
+	.label {
+		background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+		transition: background-size var(--dur-3) var(--ease-out);
+	}
+
+	.button:hover .label {
+		background-size: 0% 1px;
+		background-position: right bottom;
+	}
+
+	.arrow {
+		font-family: var(--font-mono);
+		font-size: 0.75em;
+		transition: translate var(--dur-2) var(--ease-out);
+	}
+
+	.button:hover .arrow {
+		translate: 0.25em 0;
 	}
 
 	.primary {
-		background: var(--accent);
-		color: var(--on-accent);
-	}
-
-	.primary:hover {
-		background: color-mix(in oklch, var(--accent) 88%, var(--text));
-	}
-
-	.secondary {
-		border-color: var(--border);
-		color: var(--text);
-	}
-
-	.secondary:hover {
-		border-color: var(--accent);
-		color: var(--accent);
+		color: var(--spot);
 	}
 </style>

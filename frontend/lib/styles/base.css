@@ -21,6 +21,7 @@ body {
 	font-optical-sizing: auto;
 	font-variant-numeric: oldstyle-nums proportional-nums;
 	line-height: 1.55;
+	counter-reset: section figure;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 }
@@ -32,8 +33,14 @@ body::before {
 	inset: 0;
 	z-index: -1;
 	pointer-events: none;
-	opacity: light-dark(0.05, 0.07);
+	opacity: 0.05;
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 1.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+	body::before {
+		opacity: 0.08;
+	}
 }
 
 h1,
