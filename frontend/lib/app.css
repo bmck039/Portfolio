@@ -1,31 +1,36 @@
+/*
+ * Colours follow the visitor's light/dark setting: each token holds both
+ * variants via light-dark(). Change --accent-hue to re-colour the whole site.
+ */
 :root {
-	--bg: #0a0e1a;
-	--bg-surface: #111827;
-	--bg-raised: #1a2235;
-	--border: rgba(255, 255, 255, 0.07);
-	--border-hover: rgba(255, 255, 255, 0.16);
-	--text: #e2d9cc;
-	--text-dim: #7a7265;
-	--text-muted: #4a4540;
+	color-scheme: light dark;
 
-	--gold: #d4a843;
-	--teal: #5cc8c8;
-	--violet: #9b8fe0;
-	--green: #6ec97a;
-	--accent: var(--gold);
-	--accent-dim: color-mix(in srgb, var(--accent) 15%, transparent);
+	--accent-hue: 55;
+	--neutral-hue: 75;
 
-	--font-display: 'Cormorant Garamond', Georgia, serif;
-	--font-body: 'IBM Plex Sans', sans-serif;
-	--font-mono: 'IBM Plex Mono', monospace;
+	--bg: light-dark(oklch(0.985 0.004 var(--neutral-hue)), oklch(0.165 0.005 var(--neutral-hue)));
+	--bg-surface: light-dark(oklch(0.96 0.005 var(--neutral-hue)), oklch(0.2 0.006 var(--neutral-hue)));
+	--bg-raised: light-dark(oklch(1 0 0), oklch(0.215 0.007 var(--neutral-hue)));
+	--border: light-dark(oklch(0.9 0.006 var(--neutral-hue)), oklch(0.29 0.008 var(--neutral-hue)));
+	--border-hover: light-dark(oklch(0.8 0.01 var(--neutral-hue)), oklch(0.4 0.01 var(--neutral-hue)));
+	--text: light-dark(oklch(0.21 0.01 var(--neutral-hue)), oklch(0.95 0.005 var(--neutral-hue)));
+	--text-dim: light-dark(oklch(0.42 0.01 var(--neutral-hue)), oklch(0.76 0.008 var(--neutral-hue)));
+	--text-muted: light-dark(oklch(0.52 0.01 var(--neutral-hue)), oklch(0.62 0.008 var(--neutral-hue)));
 
-	--nav-h: 64px;
-	--max-w: 1100px;
+	--accent: light-dark(oklch(0.56 0.16 var(--accent-hue)), oklch(0.8 0.14 var(--accent-hue)));
+	--accent-dim: color-mix(in oklch, var(--accent) 14%, transparent);
+	/* Text drawn on top of an accent background */
+	--on-accent: light-dark(oklch(0.99 0.01 var(--accent-hue)), oklch(0.2 0.03 var(--accent-hue)));
+
+	--font-body: 'Geist Variable', system-ui, sans-serif;
+	--font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+	--font-display: var(--font-body);
+
+	--bar-h: 56px;
+	--max-w: 1040px;
 	--gutter: 32px;
-	--radius: 6px;
-	--ease: cubic-bezier(0.4, 0, 0.2, 1);
-
-	color-scheme: dark;
+	--radius: 10px;
+	--ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
 *,
@@ -38,27 +43,22 @@
 
 html {
 	scroll-behavior: smooth;
-	scroll-padding-top: var(--nav-h);
+	scroll-padding-top: calc(var(--bar-h) + 16px);
+	-webkit-text-size-adjust: 100%;
 }
 
 body {
 	background: var(--bg);
 	color: var(--text);
 	font-family: var(--font-body);
-	line-height: 1.65;
+	font-size: 1rem;
+	line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
-	overflow-x: hidden;
+	text-rendering: optimizeLegibility;
 }
 
-/* Dot-grid background texture */
-body::before {
-	content: '';
-	position: fixed;
-	inset: 0;
-	background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-	background-size: 28px 28px;
-	pointer-events: none;
-	z-index: 0;
+::selection {
+	background: var(--accent-dim);
 }
 
 a {
@@ -78,25 +78,19 @@ img {
 :focus-visible {
 	outline: 2px solid var(--accent);
 	outline-offset: 3px;
+	border-radius: 4px;
 }
 
 /* Scroll reveal, driven by lib/reveal.ts */
 [data-reveal] {
 	transition:
-		opacity 0.65s var(--ease),
-		transform 0.65s var(--ease);
+		opacity 0.5s var(--ease),
+		translate 0.5s var(--ease);
 }
 
 [data-reveal='hidden'] {
 	opacity: 0;
-	transform: translateY(28px);
-}
-
-@keyframes fade-up {
-	from {
-		opacity: 0;
-		transform: translateY(20px);
-	}
+	translate: 0 12px;
 }
 
 @media (max-width: 680px) {

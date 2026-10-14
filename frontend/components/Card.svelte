@@ -15,12 +15,10 @@
 		alt?: string
 		/** Where the card goes when clicked. "github.com/owner/repo" works without the https://. */
 		link?: string
-		/** Small coloured label above the title. */
+		/** Small label above the title, such as a category or dates. */
 		badge?: string
 		/** Chips along the bottom. Left out, a card filled in from GitHub shows the repository's topics, or its language. */
 		tags?: string[]
-		/** Colour of the badge and the bar shown on hover. */
-		accent?: 'gold' | 'teal' | 'violet' | 'green'
 		/** How much of the section's width the card takes up on a wide screen. */
 		width?: 'third' | 'half' | 'full'
 		/** Extra content placed under the description. */
@@ -36,7 +34,6 @@
 		link,
 		badge,
 		tags,
-		accent = 'gold',
 		width = 'third',
 		children,
 	}: Props = $props()
@@ -68,7 +65,7 @@
 	const source = $derived(repoRef ? 'GitHub' : external ? new URL(href!).hostname.replace(/^www\./, '') : '')
 </script>
 
-<article class="card {width}" style:--card-accent="var(--{accent})" {@attach reveal}>
+<article class="card {width}" {@attach reveal}>
 	{#if img}
 		<div class="media">
 			<img src={img} {alt} loading="lazy" />
@@ -121,8 +118,6 @@
 
 <style>
 	.card {
-		--card-accent-dim: color-mix(in srgb, var(--card-accent) 14%, transparent);
-
 		grid-column: span 4;
 		position: relative;
 		display: flex;
@@ -132,10 +127,9 @@
 		border-radius: var(--radius);
 		background: var(--bg-raised);
 		transition:
-			opacity 0.65s var(--ease),
-			transform 0.3s var(--ease),
-			border-color 0.3s,
-			box-shadow 0.3s;
+			opacity 0.5s var(--ease),
+			translate 0.5s var(--ease),
+			border-color 0.2s;
 	}
 
 	.half {
@@ -148,31 +142,13 @@
 
 	.card:hover,
 	.card:focus-within {
-		border-color: var(--border-hover);
-		transform: translateY(-6px);
-		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-	}
-
-	/* Accent bar along the top edge */
-	.card::before {
-		content: '';
-		position: absolute;
-		inset: 0 0 auto;
-		height: 2px;
-		z-index: 1;
-		background: var(--card-accent);
-		opacity: 0;
-		transition: opacity 0.3s;
-	}
-
-	.card:hover::before,
-	.card:focus-within::before {
-		opacity: 1;
+		border-color: color-mix(in oklch, var(--accent) 45%, var(--border));
 	}
 
 	.media {
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
+		border-bottom: 1px solid var(--border);
 		background: var(--bg-surface);
 	}
 
@@ -180,55 +156,63 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.5s var(--ease);
+		transition: scale 0.4s var(--ease);
 	}
 
 	.card:hover .media img {
-		transform: scale(1.04);
+		scale: 1.02;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.media img {
+			filter: brightness(0.88);
+		}
 	}
 
 	.body {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 24px;
+		padding: 20px 22px 22px;
 	}
 
 	.meta {
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		margin-bottom: 12px;
+		margin-bottom: 10px;
 		font-family: var(--font-mono);
+		font-size: 0.72rem;
 	}
 
 	.badge {
-		padding: 3px 8px;
-		border-radius: 2px;
-		font-size: 0.65rem;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--card-accent);
-		background: var(--card-accent-dim);
+		padding: 2px 8px;
+		border-radius: 999px;
+		font-weight: 500;
+		color: var(--accent);
+		background: var(--accent-dim);
 	}
 
 	.source {
 		margin-left: auto;
-		font-size: 0.7rem;
-		color: var(--text-dim);
+		color: var(--text-muted);
 		transition: color 0.2s;
 	}
 
 	.card:hover .source {
-		color: var(--text);
+		color: var(--accent);
 	}
 
 	h3 {
-		font-family: var(--font-display);
-		font-size: 1.4rem;
+		font-size: 1.1rem;
 		font-weight: 600;
-		line-height: 1.2;
-		margin-bottom: 4px;
+		line-height: 1.3;
+		letter-spacing: -0.01em;
+		transition: color 0.2s;
+	}
+
+	.card:hover h3 {
+		color: var(--accent);
 	}
 
 	/* Stretch the title link over the whole card so all of it is clickable. */
@@ -243,26 +227,24 @@
 	}
 
 	.subtitle {
-		font-family: var(--font-mono);
-		font-size: 0.72rem;
-		letter-spacing: 0.06em;
+		margin-top: 2px;
+		font-size: 0.85rem;
 		color: var(--text-muted);
 	}
 
 	.desc {
 		flex: 1;
 		margin-top: 10px;
-		font-size: 0.88rem;
-		font-weight: 300;
-		line-height: 1.7;
+		font-size: 0.92rem;
+		line-height: 1.65;
 		color: var(--text-dim);
 	}
 
 	.skeleton {
 		flex: none;
-		height: 3.4em;
-		border-radius: 3px;
-		background: linear-gradient(var(--border) 0.9em, transparent 0) 0 0.4em / 100% 1.7em;
+		height: 3.3em;
+		border-radius: 4px;
+		background: linear-gradient(var(--border) 0.9em, transparent 0) 0 0.35em / 100% 1.65em;
 		animation: pulse 1.4s ease-in-out infinite;
 	}
 
@@ -271,16 +253,15 @@
 		flex-wrap: wrap;
 		gap: 6px;
 		margin-top: auto;
-		padding-top: 20px;
+		padding-top: 18px;
 	}
 
 	.tags li {
-		padding: 3px 8px;
-		border: 1px solid var(--border);
-		border-radius: 2px;
+		padding: 2px 8px;
+		border-radius: 6px;
 		background: var(--bg-surface);
 		font-family: var(--font-mono);
-		font-size: 0.66rem;
+		font-size: 0.7rem;
 		color: var(--text-dim);
 	}
 
@@ -290,7 +271,7 @@
 		}
 	}
 
-	@media (max-width: 1100px) {
+	@media (max-width: 1040px) {
 		.card {
 			grid-column: span 6;
 		}
@@ -301,7 +282,7 @@
 		}
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 720px) {
 		.card {
 			grid-column: 1 / -1;
 		}

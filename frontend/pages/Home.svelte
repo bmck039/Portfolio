@@ -31,15 +31,14 @@
 
 	<Section label="Projects" title="Section heading">
 		<!-- Title, description and tags come from GitHub when only a repository link is given. -->
-		<Card link="github.com/bmck039/AI-Agents-in-Spades" img="/img/spades-winrates.png" width="half" accent="teal" />
+		<Card link="github.com/bmck039/AI-Agents-in-Spades" img="/img/spades-winrates.png" width="half" />
 		<Card
 			link="github.com/bmck039/lensing_and_precession"
 			img="/img/precessing-bbh-diagram.jpg"
 			width="half"
-			accent="violet"
 		/>
-		<Card link="github.com/bmck039/Robot_King_Creativity" img="/img/kcf.jpg" accent="green" />
-		<Card link="github.com/bmck039/pycbc" img="/img/optimized_match-bugfix.png" accent="violet" />
+		<Card link="github.com/bmck039/Robot_King_Creativity" img="/img/kcf.jpg" />
+		<Card link="github.com/bmck039/pycbc" img="/img/optimized_match-bugfix.png" />
 		<Card
 			title="Project title"
 			subtitle="Subtitle"

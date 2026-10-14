@@ -24,62 +24,55 @@
 </script>
 
 <section id={anchor}>
-	<div class="inner">
-		<header {@attach reveal}>
-			{#if label}
-				<p class="label">{label}</p>
-			{/if}
-			<h2>{title}</h2>
-		</header>
+	<header {@attach reveal}>
+		{#if label}
+			<p class="label">{label}</p>
+		{/if}
+		<h2>{title}</h2>
+	</header>
 
-		<div class="items">
-			{@render children?.()}
-		</div>
+	<div class="items">
+		{@render children?.()}
 	</div>
 </section>
 
 <style>
 	section {
-		position: relative;
-		z-index: 1;
-		padding: 96px 0;
-	}
-
-	/* Alternate the background of every other section on the page. */
-	section:nth-of-type(even) {
-		background: var(--bg-surface);
-	}
-
-	.inner {
 		max-width: var(--max-w);
 		margin: 0 auto;
-		padding: 0 var(--gutter);
+		padding: 72px var(--gutter);
+	}
+
+	section + :global(section) {
+		border-top: 1px solid var(--border);
 	}
 
 	header {
-		margin-bottom: 48px;
+		margin-bottom: 32px;
 	}
 
 	.label {
 		font-family: var(--font-mono);
-		font-size: 0.72rem;
-		letter-spacing: 0.18em;
+		font-size: 0.75rem;
+		font-weight: 500;
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--accent);
-		margin-bottom: 12px;
+		margin-bottom: 8px;
 	}
 
 	h2 {
-		font-family: var(--font-display);
-		font-size: clamp(2rem, 4vw, 3rem);
+		font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem);
 		font-weight: 600;
-		line-height: 1.15;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
+		text-wrap: balance;
 	}
 
 	.items {
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
-		gap: 24px;
+		gap: 20px;
 	}
 
 	.items > :global(:not(.card)) {
@@ -87,15 +80,14 @@
 	}
 
 	.items > :global(p) {
-		max-width: 68ch;
-		font-weight: 300;
+		max-width: 65ch;
 		color: var(--text-dim);
-		line-height: 1.8;
+		line-height: 1.75;
 	}
 
 	@media (max-width: 680px) {
 		section {
-			padding: 72px 0;
+			padding-block: 56px;
 		}
 	}
 </style>

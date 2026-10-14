@@ -20,40 +20,33 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		padding: 12px 28px;
+		padding: 8px 16px;
 		border: 1px solid transparent;
-		border-radius: var(--radius);
-		font-family: var(--font-mono);
-		font-size: 0.82rem;
-		letter-spacing: 0.05em;
+		border-radius: 999px;
+		font-size: 0.9rem;
+		font-weight: 500;
 		transition:
-			opacity 0.2s,
-			transform 0.2s,
+			background 0.2s,
 			border-color 0.2s,
-			background 0.2s;
-	}
-
-	.button:hover {
-		transform: translateY(-2px);
+			color 0.2s;
 	}
 
 	.primary {
 		background: var(--accent);
-		color: var(--bg);
-		font-weight: 500;
+		color: var(--on-accent);
 	}
 
 	.primary:hover {
-		opacity: 0.88;
+		background: color-mix(in oklch, var(--accent) 88%, var(--text));
 	}
 
 	.secondary {
-		border-color: var(--border-hover);
+		border-color: var(--border);
 		color: var(--text);
 	}
 
 	.secondary:hover {
 		border-color: var(--accent);
-		background: var(--accent-dim);
+		color: var(--accent);
 	}
 </style>

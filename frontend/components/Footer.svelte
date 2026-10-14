@@ -17,13 +17,9 @@
 
 <style>
 	footer {
-		position: relative;
-		z-index: 1;
 		padding: 28px 0;
 		border-top: 1px solid var(--border);
-		background: var(--bg);
-		font-family: var(--font-mono);
-		font-size: 0.72rem;
+		font-size: 0.85rem;
 		color: var(--text-muted);
 	}
 
@@ -47,7 +43,7 @@
 	}
 
 	a:hover {
-		color: var(--text);
+		color: var(--accent);
 	}
 
 	@media (max-width: 680px) {
