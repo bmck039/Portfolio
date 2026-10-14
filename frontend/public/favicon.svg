@@ -1,7 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <style>
-    rect { fill: #c25a12; }
-    @media (prefers-color-scheme: dark) { rect { fill: #f5a15c; } }
+    rect { fill: #f6f1e8; }
+    path { stroke: #c33a1f; }
+    @media (prefers-color-scheme: dark) {
+      rect { fill: #24201c; }
+      path { stroke: #f0815e; }
+    }
   </style>
-  <rect x="4" y="4" width="24" height="24" rx="7" />
+  <rect width="32" height="32" rx="7" />
+  <path d="M3 16 C5 13.5 6.5 13.5 8 16 S11 18.5 12.5 16 S15 12.5 16 16 S18 20.5 19 16 S20.5 9.5 21.5 16 S23 23.5 24 16 S25 11 25.8 16 S27 18 28 16 L29.5 16"
+        fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 </svg>

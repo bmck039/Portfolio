@@ -2,54 +2,108 @@
 	import { site } from '../lib/site'
 
 	const year = new Date().getFullYear()
+	const updated = new Date(__BUILD_DATE__).toLocaleDateString('en-US', {
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric',
+	})
+	const isExternal = (href: string) => /^https?:/.test(href)
 </script>
 
 <footer>
-	<div class="inner">
-		<p>© {year} {site.name}</p>
-		<ul>
+	<div class="wrap grid">
+		<div class="rule" aria-hidden="true"></div>
+
+		<p class="annot label">Colophon</p>
+
+		<div class="colophon">
+			<p>{site.colophon}<span class="end" aria-hidden="true"></span></p>
+			<p class="annot">© {year} {site.name} · Last updated {updated}</p>
+		</div>
+
+		<ul class="links">
 			{#each site.links as link (link.label)}
-				<li><a href={link.href}>{link.label}</a></li>
+				<li>
+					<a
+						href={link.href}
+						target={isExternal(link.href) ? '_blank' : undefined}
+						rel={isExternal(link.href) ? 'noopener' : undefined}>{link.label}</a
+					>
+				</li>
 			{/each}
+			<li data-print="hide"><a href="#top" class="top">Back to top <span aria-hidden="true">↑</span></a></li>
 		</ul>
 	</div>
 </footer>
 
 <style>
 	footer {
-		padding: 28px 0;
-		border-top: 1px solid var(--border);
-		font-size: 0.85rem;
-		color: var(--text-muted);
+		padding-block: 0 var(--space-xl);
 	}
 
-	.inner {
-		max-width: var(--max-w);
-		margin: 0 auto;
-		padding: 0 var(--gutter);
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 12px;
+	.rule {
+		grid-column: 1 / -1;
+		margin-bottom: var(--space-s);
+		border-top: 3px double var(--rule-strong);
 	}
 
-	ul {
-		display: flex;
-		gap: 24px;
+	.label {
+		grid-column: margin;
+		padding-top: 0.3em;
 	}
 
-	a {
-		transition: color 0.2s;
+	.colophon {
+		grid-column: 4 / 10;
+		display: grid;
+		gap: var(--space-xs);
+		font-size: var(--step--1);
+		color: var(--ink-2);
 	}
 
-	a:hover {
-		color: var(--accent);
+	.colophon p:first-child {
+		max-width: 52ch;
 	}
 
-	@media (max-width: 680px) {
-		.inner {
-			flex-direction: column;
-			text-align: center;
+	/* End mark, as at the close of a magazine article. */
+	.end {
+		display: inline-block;
+		width: 0.55em;
+		height: 0.55em;
+		margin-left: 0.4em;
+		background: var(--spot);
+	}
+
+	.links {
+		grid-column: 10 / -1;
+		font-size: var(--step--1);
+	}
+
+	.links li + li {
+		border-top: 1px solid var(--rule);
+	}
+
+	.links a {
+		display: block;
+		padding-block: 0.25em;
+		transition: color var(--dur-2);
+	}
+
+	.links a:hover {
+		color: var(--spot);
+	}
+
+	.top {
+		color: var(--ink-3);
+	}
+
+	@media (max-width: 900px) {
+		.colophon,
+		.links {
+			grid-column: 1 / -1;
+		}
+
+		.colophon {
+			margin-block: var(--space-xs) var(--space-m);
 		}
 	}
 </style>

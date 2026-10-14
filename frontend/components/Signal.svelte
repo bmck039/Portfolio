@@ -96,7 +96,7 @@
 
 	<figcaption>
 		<p class="caption"><span class="annot number"></span>{caption}</p>
-		<p class="annot readout" aria-hidden="true">
+		<p class="annot readout" aria-hidden="true" data-print="hide">
 			{#if cursor}
 				<span>t {formatTime(cursor.t)}</span><span>f {formatFreq(cursor.f)}</span>
 			{:else}

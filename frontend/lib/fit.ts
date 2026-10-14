@@ -11,7 +11,8 @@ export function fit({ min = 32, max = 220 }: { min?: number; max?: number } = {}
 
 		const update = () => {
 			text.style.fontSize = '100px'
-			const size = (100 * node.clientWidth) / text.offsetWidth
+			// A hair under the full width, so overhanging letters stay inside the margin.
+			const size = (98.5 * node.clientWidth) / text.getBoundingClientRect().width
 			text.style.fontSize = `${Math.min(max, Math.max(min, size))}px`
 		}
 

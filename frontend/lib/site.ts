@@ -36,4 +36,8 @@ export const site = {
 
 	/** Adds a Résumé link to the masthead, e.g. '/resume.pdf'. */
 	resume: null as string | null,
+
+	/** Closing note in the footer about how the site is made. */
+	colophon:
+		'Set in Newsreader and Geist Mono. Built with Svelte and Go, and served from a Docker container through a Cloudflare tunnel.',
 }

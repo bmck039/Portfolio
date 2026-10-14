@@ -17,7 +17,7 @@
 	let { intro = true, children }: Props = $props()
 </script>
 
-<a class="skip" href="#content">Skip to content</a>
+<a class="skip" href="#content" data-print="hide">Skip to content</a>
 <Header {intro} />
 <main id="content">
 	{@render children()}
@@ -32,8 +32,8 @@
 		z-index: 20;
 		padding: 8px 14px;
 		border-radius: 8px;
-		background: var(--accent);
-		color: var(--on-accent);
+		background: var(--spot);
+		color: var(--paper);
 		translate: 0 -200%;
 	}
 
