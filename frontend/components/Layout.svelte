@@ -1,8 +1,10 @@
 <script lang="ts">
-	import '@fontsource-variable/geist'
 	import '@fontsource-variable/geist-mono'
+	import '@fontsource-variable/newsreader/opsz.css'
 	import type { Snippet } from 'svelte'
-	import '../lib/app.css'
+	import '../lib/styles/tokens.css'
+	import '../lib/styles/base.css'
+	import '../lib/styles/print.css'
 	import Footer from './Footer.svelte'
 	import Header from './Header.svelte'
 

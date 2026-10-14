@@ -1,0 +1,84 @@
+/*
+ * Design tokens. Every colour holds a light and a dark value via light-dark(),
+ * so the site follows the visitor's system setting.
+ *
+ * The palette is printed matter: paper, ink, hairline rules and a single
+ * spot colour. Change --spot-hue to re-ink the whole site.
+ */
+:root {
+	color-scheme: light dark;
+
+	/* Colour */
+	--spot-hue: 32;
+
+	--paper: light-dark(oklch(0.972 0.012 85), oklch(0.18 0.008 60));
+	--paper-2: light-dark(oklch(0.945 0.015 85), oklch(0.215 0.009 60));
+	--ink: light-dark(oklch(0.2 0.015 60), oklch(0.93 0.014 85));
+	--ink-2: light-dark(oklch(0.37 0.015 60), oklch(0.81 0.012 85));
+	--ink-3: light-dark(oklch(0.5 0.014 60), oklch(0.67 0.01 85));
+	--rule: color-mix(in oklch, var(--ink) 14%, transparent);
+	--rule-strong: color-mix(in oklch, var(--ink) 40%, transparent);
+	--spot: light-dark(oklch(0.55 0.19 var(--spot-hue)), oklch(0.72 0.16 var(--spot-hue)));
+	--spot-wash: color-mix(in oklch, var(--spot) 13%, transparent);
+	/* Light card behind images in dark mode, so they read as printed plates. */
+	--mat: light-dark(transparent, oklch(0.9 0.012 85));
+
+	/* Type */
+	--font-serif: 'Newsreader Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+	--font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+	/* Fluid modular scale: 17px at a 360px screen up to 19px at 1440px, ratio 1.2 → 1.28 */
+	--step--2: 0.75rem;
+	--step--1: clamp(0.8854rem, 0.8713rem + 0.0627vw, 0.9277rem);
+	--step-0: clamp(1.0625rem, 1.0208rem + 0.1852vw, 1.1875rem);
+	--step-1: clamp(1.275rem, 1.1933rem + 0.363vw, 1.52rem);
+	--step-2: clamp(1.53rem, 1.3915rem + 0.6157vw, 1.9456rem);
+	--step-3: clamp(1.836rem, 1.6179rem + 0.9694vw, 2.4904rem);
+	--step-4: clamp(2.2032rem, 1.875rem + 1.4585vw, 3.1877rem);
+	--step-5: clamp(2.6438rem, 2.165rem + 2.128vw, 4.0802rem);
+	--step-6: clamp(3.1726rem, 2.4893rem + 3.0371vw, 5.2227rem);
+	--step-7: clamp(3.8071rem, 2.8478rem + 4.2636vw, 6.685rem);
+
+	--measure: 64ch;
+
+	/* Space, as multiples of the body size */
+	--space-3xs: clamp(0.2656rem, 0.2552rem + 0.0463vw, 0.2969rem);
+	--space-2xs: clamp(0.5312rem, 0.5104rem + 0.0926vw, 0.5938rem);
+	--space-xs: clamp(0.7969rem, 0.7656rem + 0.1389vw, 0.8906rem);
+	--space-s: clamp(1.0625rem, 1.0208rem + 0.1852vw, 1.1875rem);
+	--space-m: clamp(1.5938rem, 1.5312rem + 0.2778vw, 1.7812rem);
+	--space-l: clamp(2.125rem, 2.0417rem + 0.3704vw, 2.375rem);
+	--space-xl: clamp(3.1875rem, 3.0625rem + 0.5556vw, 3.5625rem);
+	--space-2xl: clamp(4.25rem, 4.0833rem + 0.7407vw, 4.75rem);
+	--space-3xl: clamp(6.375rem, 6.125rem + 1.1111vw, 7.125rem);
+
+	/* Grid */
+	--grid-max: 76rem;
+	--gutter: clamp(1.25rem, 4vw, 3rem);
+	--col-gap: clamp(1rem, 2vw, 1.75rem);
+	--bar-h: 3.25rem;
+
+	/* Motion */
+	--dur-1: 120ms;
+	--dur-2: 240ms;
+	--dur-3: 520ms;
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+	/* Old names, kept until every component uses the tokens above. */
+	--bg: var(--paper);
+	--bg-surface: var(--paper-2);
+	--bg-raised: var(--paper);
+	--border: var(--rule);
+	--border-hover: var(--rule-strong);
+	--text: var(--ink);
+	--text-dim: var(--ink-2);
+	--text-muted: var(--ink-3);
+	--accent: var(--spot);
+	--accent-dim: var(--spot-wash);
+	--on-accent: var(--paper);
+	--font-body: var(--font-serif);
+	--max-w: var(--grid-max);
+	--radius: 4px;
+	--ease: var(--ease-out);
+}
