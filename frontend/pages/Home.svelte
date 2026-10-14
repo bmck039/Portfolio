@@ -10,12 +10,11 @@
 </script>
 
 <Layout>
-	<Section label="About" title="Where physics meets software">
+	<Section label="About" title="Programmer and Physicist">
 		<Note>B.S. Physics and Computer Science, minor in Mathematics. Southwestern University, 2026.</Note>
 		<p>
 			I studied physics and computer science at Southwestern University, with a minor in mathematics, and
-			graduated in May 2026. Most of my work sits where the two overlap: writing software to answer a physics
-			question, or building the systems other people rely on.
+			graduated in May 2026. I enjoy working on both the analytical and computational sides of problems. I also enjoy creating software that solves complex challenges.
 		</p>
 		<p>
 			In the summer of 2025 I joined an NSF Research Experience for Undergraduates at UT Dallas, studying
@@ -24,8 +23,7 @@
 		</p>
 		<p>
 			On the software side, I built the backend of a platform that matches 1,600 students with 70 campus
-			organizations, and spent more than two years as an IT student technician keeping the university’s equipment
-			running.
+			organizations, spent more than two years as an IT student technician keeping the university's equipment running, and created an AI framework for incomplete-information games.
 		</p>
 	</Section>
 
@@ -47,7 +45,7 @@
 			badge="Jan – May 2024"
 			title="Multi-Agent Spades AI"
 			subtitle="Artificial Intelligence course · Southwestern University"
-			desc="A game framework for the card game Spades, with agents that reason under imperfect information and coordinate with a partner they can’t see into. Built with three other students using Monte Carlo Tree Search and deep reinforcement learning trained through self-play, reaching intermediate human-level play."
+			desc="A game framework for the card game Spades, with agents that reason under imperfect information and coordinate with a partner they can't see into. Built with three other students using Monte Carlo Tree Search and deep reinforcement learning trained through self-play, reaching intermediate human-level play."
 			tags={['Python', 'PyTorch', 'Docker', 'Reinforcement learning']}
 			link="github.com/bmck039/AI-Agents-in-Spades"
 		/>
@@ -55,10 +53,11 @@
 			width="half"
 			img="/img/optimized_match-bugfix.png"
 			alt="Plot of match values against time shift showing a sharp unphysical spike"
+			caption="Unphysical spike in match values due to unbounded optimization."
 			badge="May – Aug 2025"
 			title="Fixing optimized_match() in PyCBC"
 			subtitle="Open-source contribution · gwastro/pycbc PR #5146"
-			desc="I found unphysical, discontinuous output from PyCBC’s optimized_match() and traced it to an unbounded scipy.optimize.minimize_scalar call escaping the valid parameter range. The fix switches to a bounded call and adds the edge case to the test suite; core maintainers have approved it pending a minor refactor."
+			desc="I found unphysical, discontinuous output from PyCBC's optimized_match() and traced it to an unbounded scipy.optimize.minimize_scalar call escaping the valid parameter range. The fix switches to a bounded call and adds the edge case to the test suite; core maintainers have approved it pending a minor refactor."
 			tags={['Python', 'SciPy', 'Matched filtering', 'pytest']}
 			link="github.com/gwastro/pycbc/pull/5146"
 		/>
@@ -66,6 +65,7 @@
 			width="half"
 			img="/img/precessing-bbh-diagram.jpg"
 			alt="Diagram of a precessing binary black hole system and its waveform"
+			caption="Diagram of a binary black hole system and its waveform."
 			badge="May – Aug 2025"
 			title="Lensing and Precession"
 			subtitle="NSF REU · UT Dallas"
@@ -77,6 +77,8 @@
 			width="half"
 			img="/img/kcf.jpg"
 			alt="A small four-legged robot built from white 3D-printed parts and servo motors"
+			caption="Custom-built quadruped robot prototype with twelve servo-driven joints."
+			badge="Jan – May 2025"
 			title="Quadruped Robot"
 			subtitle="Robotics research · Southwestern University"
 			desc="An Arduino C++ library for a custom-built quadruped robot with twelve servo-driven joints: inverse kinematics, smooth time-parameterised movement across all joints, and interactive calibration. Built with Collin Cook."
@@ -85,10 +87,10 @@
 		/>
 		<Card
 			width="full"
-			badge="Personal project"
+			badge="Jan – May 2024"
 			title="Fish Tank Controller"
-			subtitle="Home automation"
-			desc="An automated aquarium system: a web dashboard for logging water readings, a TensorFlow model that predicts future tank conditions from them, and Bluetooth control of the tank’s light using a protocol reverse-engineered from the manufacturer’s Android app."
+			subtitle="Home automation · Personal project"
+			desc="An automated aquarium system: a web dashboard for logging water readings, a TensorFlow model that predicts future tank conditions and fertilization routine from them, and Bluetooth control of the tank's light using a protocol reverse-engineered from the manufacturer's Android app."
 			tags={['Python', 'TensorFlow', 'Bluetooth LE']}
 			link="github.com/bmck039/Fish-Tank-Controller"
 		/>
@@ -127,7 +129,7 @@
 	</Section>
 
 	<Section label="Contact" title="Get in touch">
-		<p>Email is the best way to reach me. I’m also on GitHub and LinkedIn.</p>
+		<p>Email is the best way to reach me. I'm also on GitHub and LinkedIn.</p>
 		<div class="actions">
 			{#each site.links as link (link.label)}
 				<Button href={link.href}>{link.label}</Button>

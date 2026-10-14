@@ -7,16 +7,16 @@ export interface Link {
 export const site = {
 	/** Shown on one line at the top of the home page, and in the bar once it collapses. */
 	name: 'Ben McKallip',
-	role: 'Physics & Computer Science',
+	role: 'Physicist | Computer Scientist',
 	summary:
-		'I write software and use it to do physics, from gravitational-wave research to full-stack web platforms and multi-agent AI.',
+		'As both a computer scientist and physicist by training, I approach problems with a unique blend of attention to detail, analytical rigor, and computational skill.',
 	/** Shown in the line above the name. */
 	location: 'Round Rock, TX',
 
 	/** The signal figure at the top of the home page. */
 	figure: {
 		caption:
-			'The gravitational-wave “chirp” of two black holes spiralling together. The signal rises in pitch and strength until, at zero, they merge into one.',
+			'The gravitational-wave “chirp” of two black holes spiralling together. The signal rises in frequency and strength until, at zero, they merge into one.',
 	},
 
 	/** Section links in the header bar, numbered in order. Each `#id` matches the `id` of a <Section>. */
@@ -41,5 +41,5 @@ export const site = {
 
 	/** Closing note in the footer about how the site is made. */
 	colophon:
-		'Set in Newsreader and Geist Mono. Built with Svelte and Go, and served from a Docker container through a Cloudflare tunnel.',
+		'Set in Newsreader and Geist Mono. Built with Svelte and Go, and served from a Docker container using Cloudflare.',
 }
