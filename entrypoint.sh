@@ -5,23 +5,34 @@
 set -euo pipefail
 
 config="${CLOUDFLARED_CONFIG:-/etc/cloudflared/config.yml}"
+token_file="${CLOUDFLARED_TOKEN_FILE:-/etc/cloudflared/token}"
+
+require_readable() {
+	if [[ ! -r "$1" ]]; then
+		echo "entrypoint: $1 is not readable by uid $(id -u)" >&2
+		exit 1
+	fi
+}
 
 /app/server &
 pids=($!)
 
 if [[ -f "$config" ]]; then
-	if [[ ! -r "$config" ]]; then
-		echo "entrypoint: $config is not readable by uid $(id -u)" >&2
-		exit 1
-	fi
+	# Locally-managed tunnel: config.yml plus its credentials file.
+	require_readable "$config"
 	cloudflared tunnel --no-autoupdate --config "$config" run &
+	pids+=($!)
+elif [[ -f "$token_file" ]]; then
+	# Dashboard-managed tunnel with its token saved in a file.
+	require_readable "$token_file"
+	cloudflared tunnel --no-autoupdate run --token-file "$token_file" &
 	pids+=($!)
 elif [[ -n "${TUNNEL_TOKEN:-}" ]]; then
 	# Dashboard-managed tunnel: cloudflared reads the token from TUNNEL_TOKEN.
 	cloudflared tunnel --no-autoupdate run &
 	pids+=($!)
 else
-	echo "entrypoint: no $config and no TUNNEL_TOKEN, running without a tunnel" >&2
+	echo "entrypoint: no $config, $token_file or TUNNEL_TOKEN, running without a tunnel" >&2
 fi
 
 stopping=false

@@ -11,7 +11,8 @@ services:
       # through the cloudflared tunnel, which needs no published port.
       - "127.0.0.1:8080:8080"
     volumes:
-      # Tunnel config.yml and credentials file; see cloudflared/config.example.yml.
+      # Tunnel settings. Either a `token` file holding a dashboard tunnel token,
+      # or config.yml plus its credentials file (see config.example.yml).
       - ./cloudflared:/etc/cloudflared:ro
     environment:
       # Optional. Raises GitHub's API rate limit for the project cards; set it in .env.

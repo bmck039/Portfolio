@@ -1,4 +1,12 @@
-# Copy to config.yml and fill in. Put the tunnel's credentials file (the
+# Two ways to connect the tunnel. Files in this folder are git-ignored.
+#
+# Dashboard-managed tunnel: paste the tunnel token into a file named `token`
+# in this folder. Nothing else is needed.
+#
+# Locally-managed tunnel: copy this file to config.yml and fill it in. If both
+# exist, config.yml wins.
+#
+# Put the tunnel's credentials file (the
 # <tunnel-id>.json that `cloudflared tunnel create` wrote to ~/.cloudflared)
 # in this folder next to it. Both must be readable by uid 1000.
 #
