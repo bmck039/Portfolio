@@ -6,10 +6,10 @@
 
 <footer>
 	<div class="inner">
-		<p>© {year} {site.name.first} {site.name.last}</p>
+		<p>© {year} {site.name}</p>
 		<ul>
 			{#each site.links as link (link.label)}
-				<li><a href={link.href} target="_blank" rel="noopener">{link.label}</a></li>
+				<li><a href={link.href}>{link.label}</a></li>
 			{/each}
 		</ul>
 	</div>

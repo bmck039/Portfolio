@@ -3,11 +3,14 @@ export interface Link {
 	href: string
 }
 
-/** Site-wide details shared by the navigation bar and footer. */
+/** Site-wide details used by the header and footer. */
 export const site = {
-	name: { first: 'First', last: 'Last' },
+	/** Shown on one line at the top of the home page, and in the bar once it collapses. */
+	name: 'Your Name',
+	role: 'Your role',
+	summary: 'One or two sentences about what you do.',
 
-	/** Navigation links. Each `#id` matches the `id` of a <Section> on the home page. */
+	/** Section links in the header bar. Each `#id` matches the `id` of a <Section>. */
 	nav: [
 		{ label: 'About', href: '/#about' },
 		{ label: 'Skills', href: '/#skills' },
@@ -16,12 +19,13 @@ export const site = {
 		{ label: 'Contact', href: '/#contact' },
 	] satisfies Link[],
 
-	/** Shown in the footer. */
+	/** Contact links: buttons in the intro, links in the header bar and footer. */
 	links: [
-		{ label: 'Link one', href: '#' },
-		{ label: 'Link two', href: '#' },
+		{ label: 'Email', href: 'mailto:you@example.com' },
+		{ label: 'GitHub', href: 'https://github.com/' },
+		{ label: 'LinkedIn', href: 'https://www.linkedin.com/' },
 	] satisfies Link[],
 
-	/** Adds a highlighted button to the navigation bar, e.g. '/resume.pdf'. */
+	/** Adds a Résumé button to the intro, e.g. '/resume.pdf'. */
 	resume: null as string | null,
 }

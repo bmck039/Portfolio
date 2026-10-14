@@ -1,23 +1,12 @@
 <script lang="ts">
 	import Button from '../components/Button.svelte'
 	import Card from '../components/Card.svelte'
-	import Hero from '../components/Hero.svelte'
 	import Layout from '../components/Layout.svelte'
 	import Section from '../components/Section.svelte'
 	import { site } from '../lib/site'
 </script>
 
 <Layout>
-	<Hero
-		eyebrow="Tagline · Tagline"
-		title={site.name.first}
-		subtitle={site.name.last}
-		desc="A sentence or two introducing yourself."
-	>
-		<Button href="#projects" variant="primary">Primary action ↓</Button>
-		<Button href="#contact">Secondary action</Button>
-	</Hero>
-
 	<Section label="About" title="Section heading">
 		<p>First paragraph.</p>
 		<p>Second paragraph.</p>
