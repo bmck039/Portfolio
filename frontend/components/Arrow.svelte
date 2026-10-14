@@ -17,8 +17,11 @@
 		line-height: 1;
 		color: var(--ink-3);
 		transition:
-			translate var(--dur-2) var(--ease-out),
+			transform var(--dur-2) var(--ease-out),
 			color var(--dur-2);
+		/* Keep the arrow on its own layer so the move is drawn at sub-pixel
+		   positions instead of snapping (and jumping when it settles). */
+		will-change: transform;
 	}
 
 	:global(a:hover) .arrow,
@@ -26,13 +29,14 @@
 		color: var(--spot);
 	}
 
+	/* Each arrow moves straight along the direction it points. */
 	:global(a:hover) .out,
 	:global(a:focus-visible) .out {
-		translate: 0.12em -0.12em;
+		transform: translate(0.15em, -0.15em);
 	}
 
 	:global(a:hover) .up,
 	:global(a:focus-visible) .up {
-		translate: 0 -0.15em;
+		transform: translateY(-0.2em);
 	}
 </style>

@@ -26,6 +26,10 @@
 
 	const updated = new Date(__BUILD_DATE__).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 	const trace = chirpPath(chirp(500, -0.3, 0.02), 1000, 20)
+	// The bar's background is cut along the same signal, so its bottom edge follows the trace.
+	const traceEdge = `url("data:image/svg+xml,${encodeURIComponent(
+		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 20" preserveAspectRatio="none"><path d="${trace}L1000 0L0 0Z"/></svg>`,
+	)}")`
 	const contact = [...site.links, ...(site.resume ? [{ label: 'Résumé', href: site.resume }] : [])]
 
 	const sectionId = (href: string) => href.split('#')[1] ?? ''
@@ -110,7 +114,7 @@
 		</div>
 	{/if}
 
-	<nav aria-label="Main" data-print="hide">
+	<nav aria-label="Main" data-print="hide" style:--trace-edge={traceEdge}>
 		<div class="bar wrap">
 			<a class="brand" href="/" tabindex={intro && collapse < 1 ? -1 : undefined}>{site.name}</a>
 			<ul class="tabs" bind:this={tabs}>
@@ -232,12 +236,25 @@
 
 	nav {
 		position: relative;
+		isolation: isolate;
 		height: var(--bar-h);
+	}
+
+	/* The bar's background reaches down to the middle of the progress trace and
+	   is masked along the signal, so the edge between bar and page is the trace. */
+	nav::before {
+		content: '';
+		position: absolute;
+		inset: 0 0 -5px;
+		z-index: -1;
 		background: var(--paper);
+		mask:
+			linear-gradient(#000 0 0) top / 100% calc(100% - 9px) no-repeat,
+			var(--trace-edge) bottom / 100% 10px no-repeat;
 		transition: background var(--dur-2);
 	}
 
-	.stuck nav {
+	.stuck nav::before {
 		background: color-mix(in oklch, var(--paper) 86%, transparent);
 		backdrop-filter: blur(12px) saturate(1.3);
 	}

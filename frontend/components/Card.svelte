@@ -141,6 +141,13 @@
 		align-items: start;
 	}
 
+	/* A full-width card leading its section sits right under the section's own
+	   rule, so it doesn't need one of its own. */
+	.full:first-child {
+		padding-top: 0;
+		border-top: none;
+	}
+
 	.full .kicker {
 		grid-column: margin;
 	}
