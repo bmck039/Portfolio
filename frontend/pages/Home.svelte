@@ -105,6 +105,18 @@
 		/>
 	</Section>
 
+	<Section label="Publications" title="Research papers">
+		<Card
+			width="full"
+			badge="Sep 2026"
+			title="Distinguishing lensing and precessional modulation in binary black-hole inspiral waveforms"
+			subtitle="Tien N. Nguyen-Vo, Tamanjyot Singh, Benjamin McKallip, Michael Kesden and Lindsay King"
+			desc="Gravitational lensing and spin precession can both modulate the gravitational waves from inspiralling binary black holes. We test whether a single L-shaped detector can tell them apart, and find that precession can mimic lensing between two similarly magnified images when fewer than three interference fringes fall within the detector's sensitive band. Because misaligned spins are common and strong lensing is rare, ruling out precession is essential to identifying genuinely lensed systems."
+			tags={['Under review at Physical Review D', 'arXiv:2609.06347', 'gr-qc']}
+			link="https://arxiv.org/abs/2609.06347"
+		/>
+	</Section>
+
 	<Section label="Experience" title="Research and work">
 		<Card
 			width="full"

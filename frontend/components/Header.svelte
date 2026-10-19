@@ -65,9 +65,11 @@
 	$effect(() => {
 		const tab = current && tabs?.querySelector<HTMLElement>(`[href$="#${current}"]`)
 		if (!tab || !tabs) return
-		const { offsetLeft, offsetWidth } = tab
-		if (offsetLeft < tabs.scrollLeft || offsetLeft + offsetWidth > tabs.scrollLeft + tabs.clientWidth) {
-			tabs.scrollTo({ left: offsetLeft - 16, behavior: 'smooth' })
+		// Positions relative to the strip itself (offsetLeft would include the name before it).
+		const strip = tabs.getBoundingClientRect()
+		const box = tab.getBoundingClientRect()
+		if (box.left < strip.left || box.right > strip.right) {
+			tabs.scrollTo({ left: tabs.scrollLeft + box.left - strip.left - 16, behavior: 'smooth' })
 		}
 	})
 </script>

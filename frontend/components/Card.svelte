@@ -111,7 +111,9 @@
 
 		{#if meta.length > 0}
 			<p class="meta annot">
-				{#each meta as item, i (i)}{#if i > 0}<span class="dot" aria-hidden="true"> · </span>{/if}{item}{/each}
+				{#each meta as item, i (i)}{#if i > 0}<span class="dot" aria-hidden="true">{' · '}</span>{/if}<span
+						class="item">{item}</span
+					>{/each}
 			</p>
 		{/if}
 	</div>
@@ -273,6 +275,11 @@
 
 	.dot {
 		color: var(--rule-strong);
+	}
+
+	/* Lines break between keywords, never inside one. */
+	.item {
+		white-space: nowrap;
 	}
 
 	@keyframes shimmer {
