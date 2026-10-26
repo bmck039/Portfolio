@@ -21,7 +21,7 @@ cloudflared/    tunnel settings, mounted into the container (git-ignored)
 - Skills and their categories: `frontend/lib/skills.ts`
 - Sections, projects and experience: `frontend/pages/Home.svelte`
 
-A `<Card>` with a GitHub `link` and no `title` or `desc` fills them in from the repository.
+A `<Card>` with a GitHub `link` and no `title` or `desc` fills them in from the repository. The server only looks up repositories owned by the accounts in `githubOwners` (`server/github.go`), so add the owner there when a card links to a new one.
 
 ## Running
 

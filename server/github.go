@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -23,6 +24,16 @@ var (
 	githubRepo  = regexp.MustCompile(`^[A-Za-z0-9._-]{1,100}$`)
 )
 
+// githubOwners are the accounts whose repositories the site's cards link to,
+// in lower case. Lookups for anyone else 404, so strangers can't use the
+// endpoint (or the token's rate limit) to look up arbitrary repositories. Add
+// an owner here when a card links to a new one.
+var githubOwners = map[string]bool{
+	"bmck039":    true,
+	"mattvolkin": true,
+	"gwastro":    true,
+}
+
 // repoInfo is the subset of GitHub's repository metadata the frontend uses.
 type repoInfo struct {
 	Name        string   `json:"name"`
@@ -37,6 +48,14 @@ type repoEntry struct {
 	fetched time.Time
 }
 
+// repoCall is a GitHub lookup in progress. Visitors who ask for the same
+// repository while it runs wait for it instead of starting their own.
+type repoCall struct {
+	done  chan struct{}
+	entry repoEntry
+	err   error
+}
+
 // githubRepos proxies repository lookups to the GitHub API and caches them, so
 // visitors never hit GitHub's rate limit themselves. Without a token GitHub
 // allows 60 lookups an hour; set GITHUB_TOKEN to raise that.
@@ -46,6 +65,7 @@ type githubRepos struct {
 
 	mu    sync.Mutex
 	cache map[string]repoEntry
+	calls map[string]*repoCall
 }
 
 func newGithubRepos(token string) *githubRepos {
@@ -53,13 +73,15 @@ func newGithubRepos(token string) *githubRepos {
 		client: &http.Client{Timeout: 5 * time.Second},
 		token:  token,
 		cache:  make(map[string]repoEntry),
+		calls:  make(map[string]*repoCall),
 	}
 }
 
 // ServeHTTP handles GET /api/github/{owner}/{repo}.
 func (g *githubRepos) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	owner, repo := r.PathValue("owner"), r.PathValue("repo")
-	if !githubOwner.MatchString(owner) || !githubRepo.MatchString(repo) || strings.Trim(repo, ".") == "" {
+	if !githubOwner.MatchString(owner) || !githubRepo.MatchString(repo) || strings.Trim(repo, ".") == "" ||
+		!githubOwners[strings.ToLower(owner)] {
 		http.NotFound(w, r)
 		return
 	}
@@ -70,11 +92,13 @@ func (g *githubRepos) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	g.mu.Unlock()
 
 	if !cached || time.Since(entry.fetched) > repoCacheTTL {
-		info, err := g.fetch(r, owner, repo)
+		fresh, err := g.refresh(r.Context(), key, owner, repo)
 		switch {
 		case err == nil:
-			entry = repoEntry{info: info, fetched: time.Now()}
-			g.store(key, entry)
+			entry = fresh
+		case r.Context().Err() != nil:
+			// The visitor left. The lookup carries on and is cached for the next one.
+			return
 		case cached:
 			// GitHub is unreachable or rate limiting us: stale data beats none.
 			log.Printf("github: %s: %v (serving cached copy)", key, err)
@@ -94,9 +118,41 @@ func (g *githubRepos) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(entry.info)
 }
 
+// refresh looks key up on GitHub and caches the result. The lookup runs on its
+// own rather than as part of the visitor's request, so it still finishes (and
+// is cached) if they leave, and visitors who ask at the same time share it.
+func (g *githubRepos) refresh(ctx context.Context, key, owner, repo string) (repoEntry, error) {
+	g.mu.Lock()
+	call, running := g.calls[key]
+	if !running {
+		call = &repoCall{done: make(chan struct{})}
+		g.calls[key] = call
+		go func() {
+			info, err := g.fetch(owner, repo)
+			call.entry, call.err = repoEntry{info: info, fetched: time.Now()}, err
+			if err == nil {
+				g.store(key, call.entry)
+			}
+			g.mu.Lock()
+			delete(g.calls, key)
+			g.mu.Unlock()
+			close(call.done)
+		}()
+	}
+	g.mu.Unlock()
+
+	select {
+	case <-call.done:
+		return call.entry, call.err
+	case <-ctx.Done():
+		return repoEntry{}, ctx.Err()
+	}
+}
+
 // fetch returns (nil, nil) when the repository doesn't exist or is private.
-func (g *githubRepos) fetch(r *http.Request, owner, repo string) (*repoInfo, error) {
-	req, err := http.NewRequestWithContext(r.Context(), http.MethodGet, githubAPI+"/repos/"+owner+"/"+repo, nil)
+// The client's timeout bounds it.
+func (g *githubRepos) fetch(owner, repo string) (*repoInfo, error) {
+	req, err := http.NewRequest(http.MethodGet, githubAPI+"/repos/"+owner+"/"+repo, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -120,10 +176,19 @@ func (g *githubRepos) fetch(r *http.Request, owner, repo string) (*repoInfo, err
 		return nil, fmt.Errorf("unexpected status %s", resp.Status)
 	}
 
-	info := &repoInfo{}
-	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(info); err != nil {
+	var body struct {
+		repoInfo
+		Private bool `json:"private"`
+	}
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&body); err != nil {
 		return nil, err
 	}
+	if body.Private {
+		// GitHub only shows private repositories to a token that can read
+		// them. Treat them as missing so the token never leaks them.
+		return nil, nil
+	}
+	info := &body.repoInfo
 	if info.Topics == nil {
 		info.Topics = []string{}
 	}
