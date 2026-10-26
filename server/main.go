@@ -30,8 +30,9 @@ func main() {
 	})
 	// API routes go here. Unknown /api/ paths 404 instead of falling through to the frontend.
 	mux.Handle("GET /api/github/{owner}/{repo}", newGithubRepos(os.Getenv("GITHUB_TOKEN")))
-	mux.Handle("/api/", http.NotFoundHandler())
-	mux.Handle("/", frontend(os.DirFS(env("STATIC_DIR", "../frontend/build"))))
+	mux.Handle("GET /api/", http.NotFoundHandler())
+	// GET also matches HEAD. Other methods, CONNECT included, get 405.
+	mux.Handle("GET /", frontend(os.DirFS(env("STATIC_DIR", "../frontend/build"))))
 
 	srv := &http.Server{
 		Addr:              ":" + port,
