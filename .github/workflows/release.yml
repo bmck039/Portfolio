@@ -1,0 +1,70 @@
+# Tests every push. When a stable release is published, also moves the `release` branch to
+# it; doco-cd on the server follows that branch (see README, "Deploying").
+name: test and release
+on:
+  push:
+    branches: [master]
+  release:
+    types: [published]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: server/go.mod
+          cache-dependency-path: server/go.mod
+      - name: Frontend type check and build
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run check
+          npm run build
+      - name: Server vet and build
+        working-directory: server
+        run: |
+          go vet ./...
+          go build ./...
+      - name: Compose file is valid
+        run: docker compose config --quiet
+      - name: Image builds and serves the site
+        run: |
+          docker build -t portfolio-web:ci .
+          docker run -d --name web -p 127.0.0.1:8080:8080 --read-only --cap-drop ALL portfolio-web:ci
+          for i in $(seq 30); do
+            if curl -fsS http://127.0.0.1:8080/healthz; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8080/healthz
+          curl -fsS http://127.0.0.1:8080/ | grep -qi '<html'
+      - if: failure()
+        run: docker logs web || true
+
+  deploy:
+    needs: test
+    if: github.event_name == 'release' && !github.event.release.prerelease
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Point the release branch at the latest stable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          latest=$(gh release view --json tagName --jq .tagName)
+          if [ "$latest" != "$TAG" ]; then
+            echo "$TAG is not the latest release ($latest); leaving the release branch alone"
+            exit 0
+          fi
+          git push --force origin "refs/tags/$TAG^{commit}:refs/heads/release"

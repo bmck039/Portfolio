@@ -1,0 +1,7 @@
+# doco-cd deployment (see README, "Deploying"). doco-cd follows the `release` branch, which
+# .github/workflows/release.yml moves to each published stable release.
+name: portfolio
+reference: release
+force_image_pull: true              # also keep cloudflared on its latest image
+environment:
+  PORTFOLIO_CONFIG: /secrets/portfolio.env   # .env, mounted into doco-cd from the host

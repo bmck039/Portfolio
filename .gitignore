@@ -5,7 +5,9 @@
 
 # Secrets
 .env
+*.env
 
-# Tunnel config and credentials
-/cloudflared/*
-!/cloudflared/config.example.yml
+# Old tunnel settings folder (the token now goes in .env as TUNNEL_TOKEN)
+/cloudflared/
+
+.claude/

@@ -3,9 +3,12 @@
 .dockerignore
 Dockerfile
 compose.yaml
+.doco-cd.yml
+.github
 **/node_modules
 frontend/build
 **/.vscode
 **/*.md
 .env
+*.env
 cloudflared

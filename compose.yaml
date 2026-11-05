@@ -1,29 +1,53 @@
+# The site plus a Cloudflare Tunnel. Settings come from .env (see README).
+#
+#   docker compose up -d --build    start; both restart automatically whenever Docker runs
+#   docker compose logs -f          watch the logs
+#   docker compose down             stop
+#
+# On the server, doco-cd runs this file for you on every release (see README, "Deploying").
+# It has no .env in its copy of the repo, so .doco-cd.yml points PORTFOLIO_CONFIG at one.
 name: portfolio
+
+x-config: &config
+  env_file:
+    - path: ${PORTFOLIO_CONFIG:-.env}
+      required: false
 
 services:
   web:
     build: .
     image: portfolio-web
+    pull_policy: build              # built here, never pulled from a registry
     container_name: portfolio-web
     restart: unless-stopped
+    <<: *config                     # GITHUB_TOKEN (optional) raises GitHub's API rate limit
     ports:
       # Loopback only, for checking the site locally. Public traffic comes in
-      # through the cloudflared tunnel, which needs no published port.
+      # through the tunnel, which needs no published port.
       - "127.0.0.1:8080:8080"
-    volumes:
-      # Tunnel settings. Either a `token` file holding a dashboard tunnel token,
-      # or config.yml plus its credentials file (see config.example.yml).
-      - ./cloudflared:/etc/cloudflared:ro
-    environment:
-      # Optional. Raises GitHub's API rate limit for the project cards; set it in .env.
-      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     read_only: true
     cap_drop:
       - ALL
     security_opt:
       - no-new-privileges:true
-    logging:
+    logging: &logging
       driver: json-file
       options:
         max-size: 10m
         max-file: "3"
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    <<: *config                     # cloudflared reads TUNNEL_TOKEN from it
+    # Shares the web container's network, so the tunnel's public hostname
+    # points at http://localhost:8080.
+    network_mode: service:web
+    depends_on: [web]
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging: *logging
